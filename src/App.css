@@ -29,7 +29,60 @@
 }
 
 
-
 .invisible-scrollbar::-webkit-scrollbar {
   display: none;
+}
+
+.input-container {
+  width: 100%;
+  border: 1px solid black;
+  padding: 5px;
+  border-radius: 20px;
+}
+
+.input-container p {
+
+  margin-bottom: 0;
+  color: #808080;
+  font-size: 1rem;
+  padding-left: 0.75rem;
+}
+
+.input-container input {
+  border: none;
+  font-size: 1.2rem;
+  outline: none;
+  box-shadow: none;
+}
+
+
+
+.form-control {
+  box-shadow: none !important;
+}
+
+.submit-btn {
+  background-color: #fff !important;
+  color: #000 !important;
+  font-size: 1.3rem !important;
+  border: 1px solid black !important;
+  border-radius: 18px !important;
+  padding: 5px !important;
+}
+
+.submit-btn:hover {
+  background-color: rgb(231, 227, 227) !important;
+
+}
+
+.submit-btn svg {
+  color: #000 !important;
+}
+
+.input-container select {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  font-size: 1.2rem;
+  color: #808080;
 }

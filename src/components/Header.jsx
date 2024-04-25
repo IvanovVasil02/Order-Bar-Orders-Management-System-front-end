@@ -1,9 +1,10 @@
 import { Col, Container, Row } from "react-bootstrap";
 import ChoiceCard from "./cards/ChoiceCard";
-// import IngedientForm from "./forms/IngredientForm";
-// import ProductForm from "./forms/ProductForm";
-// import TableForm from "./forms/TableForm";
+import IngedientForm from "./forms/IngredientForm";
+import ProductForm from "./forms/ProductForm";
+import TableForm from "./forms/TableForm";
 import OrderForm from "./forms/OrderForm";
+import Login from "./login/login";
 
 const Header = () => {
   return (
@@ -20,9 +21,10 @@ const Header = () => {
               <ChoiceCard name='Paga ordine' />
             </Col>
             <Col className='d-flex flex-column justify-content-center align-items-center'>
-              {/* <IngedientForm />
+              <Login />
+              <IngedientForm />
               <ProductForm />
-              <TableForm /> */}
+              <TableForm />
               <OrderForm />
             </Col>
           </Row>

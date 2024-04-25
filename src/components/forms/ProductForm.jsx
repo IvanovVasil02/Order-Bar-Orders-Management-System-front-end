@@ -1,17 +1,26 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ListGroup, Row, ToggleButton, ToggleButtonGroup } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAllIngredients } from "../redux/actions/ingredientsActions";
+import { handleBlur, handleInputFocus } from "../utilities";
 
 function ProductForm() {
-  const [validated, setValidated] = useState(false);
+  const dispatch = useDispatch();
+  const token = useSelector((state) => state.main.savedToken);
+  const [productName, setProductName] = useState("");
+  const [category, setCategory] = useState("");
+  const [subCategory, setSubCategory] = useState("");
+
   const foodSubCategory = [
     { name: "Panini", value: "SANDWICH" },
     { name: "Hamburger", value: "HAMBURGER" },
     { name: "Piadine", value: "DONER" },
     { name: "Fritti", value: "FRIED" },
   ];
+
   const drinkSubCategory = [
     { name: "Succhi di frutta", value: "JUICES" },
     { name: "Bevande gassate", value: "SODAS" },
@@ -22,9 +31,17 @@ function ProductForm() {
     { name: "Acqua", value: "WATER" },
     { name: "Cofee", value: "COFEE" },
   ];
-  const [category, setCategory] = useState("");
-  // eslint-disable-next-line no-unused-vars
-  const [subCategory, setSubCategory] = useState("");
+
+  const [ingredientList, setIngredientList] = useState([]);
+
+  const [isTextVisible, setIsTextVisible] = useState({ ingredient: { value: false, name: "Nome ingrediente" } });
+
+  useEffect(() => {
+    dispatch(fetchAllIngredients(token));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const [validated, setValidated] = useState(false);
 
   const handleSubmit = (event) => {
     const form = event.currentTarget;
@@ -36,8 +53,6 @@ function ProductForm() {
     setValidated(true);
   };
 
-  const [ingredientList, setIngredientList] = useState([]);
-
   const addIngredient = (value) => {
     ingredientList.includes(value)
       ? setIngredientList(ingredientList.filter((ingredient) => ingredient !== value))
@@ -48,45 +63,94 @@ function ProductForm() {
     <>
       <h2 className='mt-5'>Creia nuovo Prodotto</h2>
       <Form
+        as={Col}
         noValidate
         validated={validated}
         onSubmit={handleSubmit}
-        className='d-flex flex-column justify-content-center align-items-center mb-5'
+        className='m-5 w-lg-50 d-flex flex-column gap-4'
       >
-        <div className='d-flex justify-content-between gap-2'>
-          <Form.Select aria-label='Default select example' onChange={(e) => setCategory(e.target.value)}>
-            <option>Seleziona Categoria prodotto</option>
-            <option value='DRINK'>Bevanda</option>
-            <option value='HOT_DISHES'>Cibo Caldo</option>
-          </Form.Select>{" "}
-          <Form.Select aria-label='Default select example' onChange={(e) => setSubCategory(e.target.value)}>
-            <option>Seleziona Sottocategoria prodotto</option>
-            {category &&
-              category === "DRINK" &&
-              drinkSubCategory.map((subcategory, index) => (
-                <option value={subcategory.value} key={index}>
-                  {subcategory.name}
-                </option>
-              ))}
-            {category &&
-              category === "HOT_DISHES" &&
-              foodSubCategory.map((subcategory, index) => (
-                <option value={subcategory.value} key={index}>
-                  {subcategory.name}
-                </option>
-              ))}
-          </Form.Select>
-        </div>
-        <Form.Group as={Col} md='8' controlId='validationCustom01' className='pt-5'>
-          <Form.Label>Nome Prodotto</Form.Label>
-          <Form.Control required type='text' />
-        </Form.Group>
-        {category && category === "DRINK" && (
-          <Form.Group as={Col} controlId='validationCustom01' className='pt-5'>
-            <Form.Label>Quantità</Form.Label>
-            <Form.Control required type='text' />
-          </Form.Group>
-        )}
+        <Row>
+          <Col lg={12} className='d-flex flex-column flex-lg-row justify-content-center align-items-center gap-4'>
+            <div className='input-container'>
+              {(isTextVisible.ingredient.value || productName) && <p>Nome ingrediente</p>}
+
+              <Form.Group controlId='validationCustom023'>
+                <Form.Control
+                  required
+                  type='text'
+                  value={productName}
+                  placeholder='Nome Ingrediente'
+                  onClick={(e) => handleInputFocus("ingredient", e, isTextVisible, setIsTextVisible)}
+                  onBlur={(e) => handleBlur("ingredient", e, isTextVisible, setIsTextVisible)}
+                  onChange={(e) => setProductName(e.target.value)}
+                />
+              </Form.Group>
+            </div>
+
+            {/* <div className='d-flex justify-content-between gap-2'>
+              <Form.Select aria-label='Default select example' onChange={(e) => setCategory(e.target.value)}>
+                <option>Seleziona Categoria prodotto</option>
+                <option value='DRINK'>Bevanda</option>
+                <option value='HOT_DISHES'>Cibo Caldo</option>
+              </Form.Select>{" "}
+              <Form.Select aria-label='Default select example' onChange={(e) => setSubCategory(e.target.value)}>
+                <option>Seleziona Sottocategoria prodotto</option>
+                {category &&
+                  category === "DRINK" &&
+                  drinkSubCategory.map((subcategory, index) => (
+                    <option value={subcategory.value} key={index}>
+                      {subcategory.name}
+                    </option>
+                  ))}
+                {category &&
+                  category === "HOT_DISHES" &&
+                  foodSubCategory.map((subcategory, index) => (
+                    <option value={subcategory.value} key={index}>
+                      {subcategory.name}
+                    </option>
+                  ))}
+              </Form.Select>
+            </div> */}
+            <div className='input-container'>
+              {category && <p>Nome ingrediente</p>}
+              <Form.Select
+                aria-label='Default select example'
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                required
+              >
+                <option value=''>Categoria ingrediente</option>
+                <option value='FLOURIES'>Farinosi</option>
+                <option value='VEGETABLES'>Verdure</option>
+                <option value='MEAT'>Carne</option>
+                <option value='CHEESES'>Formaggi</option>
+                <option value='SAUCES'>Salse</option>
+              </Form.Select>
+            </div>
+            <div className='input-container'>
+              {category && <p>Nome ingrediente</p>}
+              <Form.Select
+                aria-label='Default select example'
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                required
+              >
+                <option value=''>Categoria ingrediente</option>
+                <option value='FLOURIES'>Farinosi</option>
+                <option value='VEGETABLES'>Verdure</option>
+                <option value='MEAT'>Carne</option>
+                <option value='CHEESES'>Formaggi</option>
+                <option value='SAUCES'>Salse</option>
+              </Form.Select>
+            </div>
+            {category && category === "DRINK" && (
+              <Form.Group as={Col} controlId='validationCustom01' className='pt-5'>
+                <Form.Label>Quantità</Form.Label>
+                <Form.Control required type='text' />
+              </Form.Group>
+            )}
+          </Col>
+        </Row>
 
         <Row className='pt-5'>
           <Col>

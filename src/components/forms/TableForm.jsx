@@ -25,7 +25,7 @@ function TableForm() {
         onSubmit={handleSubmit}
         className='d-flex flex-column justify-content-center align-items-center'
       >
-        <Form.Group as={Col} md='8' controlId='validationCustom01' className='pt-5'>
+        <Form.Group as={Col} md='8' controlId='validationCustom012' className='pt-5'>
           <Form.Label>Numero Tavoli</Form.Label>
           <Form.Control required type='number' />
         </Form.Group>

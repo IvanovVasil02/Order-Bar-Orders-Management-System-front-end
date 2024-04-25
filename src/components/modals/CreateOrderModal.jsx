@@ -10,6 +10,7 @@ import { useState } from "react";
 import ProductCard from "../cards/ProductCard";
 
 const CreateOrderModal = (props) => {
+  // eslint-disable-next-line no-unused-vars
   const [selectedCategory, setSelectedCategory] = useState("");
 
   const handleSelectProduct = (selectedCategory) => {
