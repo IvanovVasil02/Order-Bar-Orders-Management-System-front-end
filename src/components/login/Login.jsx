@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { FaRegArrowAltCircleRight } from "react-icons/fa";
 import { useDispatch } from "react-redux";
-import { fetchLogin } from "../redux/actions/AuthenticationActions";
+import { fetchLogin } from "../redux/actions/authenticationActions";
 import { handleInputFocus, handleBlur } from "../utilities";
 const Login = () => {
   const dispatch = useDispatch();

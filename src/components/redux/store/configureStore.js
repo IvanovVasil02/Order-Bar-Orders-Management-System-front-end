@@ -3,9 +3,10 @@ import { combineReducers, configureStore, getDefaultMiddleware } from "@reduxjs/
 import storage from "redux-persist/lib/storage";
 import mainReducer from "../reducers/mainReducer";
 import ingredientsReducer from "../reducers/ingredientsReducer";
+import productsReducer from "../reducers/productsReducer";
+import tablesReducer from "../reducers/tablesReducer";
 import { persistReducer, persistStore } from "redux-persist";
 import { encryptTransform } from "redux-persist-transform-encrypt";
-
 const persistConfig = {
   key: "root",
   storage,
@@ -19,6 +20,8 @@ const persistConfig = {
 const rootReducer = combineReducers({
   main: mainReducer,
   ingredients: ingredientsReducer,
+  products: productsReducer,
+  tables: tablesReducer,
 });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

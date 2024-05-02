@@ -1,18 +1,23 @@
 import { useEffect, useState } from "react";
-import { ListGroup, Row, ToggleButton, ToggleButtonGroup } from "react-bootstrap";
+import { ListGroup, Row, ToggleButtonGroup } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllIngredients } from "../redux/actions/ingredientsActions";
-import { handleBlur, handleInputFocus } from "../utilities";
+import { handleBlur, handleInputFocus, ingredientBtnSpawner } from "../utilities";
+import { saveProduct } from "../redux/actions/productActions";
 
 function ProductForm() {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.main.savedToken);
+  const allIngredientList = useSelector((state) => state.ingredients.ingredientList);
   const [productName, setProductName] = useState("");
-  const [category, setCategory] = useState("");
-  const [subCategory, setSubCategory] = useState("");
+  const [productCategory, setProductCategory] = useState("");
+  const [productSubCategory, setProductSubCategory] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [price, setPrice] = useState("");
+  const [ingredientList, setIngredientList] = useState([]);
 
   const foodSubCategory = [
     { name: "Panini", value: "SANDWICH" },
@@ -32,9 +37,10 @@ function ProductForm() {
     { name: "Cofee", value: "COFEE" },
   ];
 
-  const [ingredientList, setIngredientList] = useState([]);
-
-  const [isTextVisible, setIsTextVisible] = useState({ ingredient: { value: false, name: "Nome ingrediente" } });
+  const [isTextVisible, setIsTextVisible] = useState({
+    product: { value: false, name: "Nome Prodotto" },
+    price: { value: false, name: "Prezzo" },
+  });
 
   useEffect(() => {
     dispatch(fetchAllIngredients(token));
@@ -44,12 +50,12 @@ function ProductForm() {
   const [validated, setValidated] = useState(false);
 
   const handleSubmit = (event) => {
+    event.preventDefault();
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
-      event.preventDefault();
       event.stopPropagation();
     }
-
+    dispatch(saveProduct(productCategory, productSubCategory, productName, price, quantity, ingredientList, token));
     setValidated(true);
   };
 
@@ -62,93 +68,92 @@ function ProductForm() {
   return (
     <>
       <h2 className='mt-5'>Creia nuovo Prodotto</h2>
-      <Form
-        as={Col}
-        noValidate
-        validated={validated}
-        onSubmit={handleSubmit}
-        className='m-5 w-lg-50 d-flex flex-column gap-4'
-      >
+      <Form as={Col} noValidate validated={validated} className='m-5 w-lg-50 d-flex flex-column gap-4'>
         <Row>
           <Col lg={12} className='d-flex flex-column flex-lg-row justify-content-center align-items-center gap-4'>
             <div className='input-container'>
-              {(isTextVisible.ingredient.value || productName) && <p>Nome ingrediente</p>}
+              {(isTextVisible.product.value || productName) && <p>Nome prodotto</p>}
 
               <Form.Group controlId='validationCustom023'>
                 <Form.Control
                   required
                   type='text'
                   value={productName}
-                  placeholder='Nome Ingrediente'
-                  onClick={(e) => handleInputFocus("ingredient", e, isTextVisible, setIsTextVisible)}
-                  onBlur={(e) => handleBlur("ingredient", e, isTextVisible, setIsTextVisible)}
+                  placeholder='Nome prodotto'
+                  onClick={(e) => handleInputFocus("product", e, isTextVisible, setIsTextVisible)}
+                  onBlur={(e) => handleBlur("product", e, isTextVisible, setIsTextVisible)}
                   onChange={(e) => setProductName(e.target.value)}
                 />
               </Form.Group>
             </div>
 
-            {/* <div className='d-flex justify-content-between gap-2'>
-              <Form.Select aria-label='Default select example' onChange={(e) => setCategory(e.target.value)}>
-                <option>Seleziona Categoria prodotto</option>
+            <div className='input-container'>
+              {productCategory && <p>Categoria prodotto</p>}
+              <Form.Select
+                aria-label='Default select example'
+                value={productCategory}
+                onChange={(e) => setProductCategory(e.target.value)}
+                required
+              >
+                <option value=''>Categoria prodotto</option>
                 <option value='DRINK'>Bevanda</option>
                 <option value='HOT_DISHES'>Cibo Caldo</option>
-              </Form.Select>{" "}
-              <Form.Select aria-label='Default select example' onChange={(e) => setSubCategory(e.target.value)}>
-                <option>Seleziona Sottocategoria prodotto</option>
-                {category &&
-                  category === "DRINK" &&
-                  drinkSubCategory.map((subcategory, index) => (
-                    <option value={subcategory.value} key={index}>
-                      {subcategory.name}
-                    </option>
-                  ))}
-                {category &&
-                  category === "HOT_DISHES" &&
-                  foodSubCategory.map((subcategory, index) => (
-                    <option value={subcategory.value} key={index}>
-                      {subcategory.name}
-                    </option>
-                  ))}
-              </Form.Select>
-            </div> */}
-            <div className='input-container'>
-              {category && <p>Nome ingrediente</p>}
-              <Form.Select
-                aria-label='Default select example'
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                required
-              >
-                <option value=''>Categoria ingrediente</option>
-                <option value='FLOURIES'>Farinosi</option>
-                <option value='VEGETABLES'>Verdure</option>
-                <option value='MEAT'>Carne</option>
-                <option value='CHEESES'>Formaggi</option>
-                <option value='SAUCES'>Salse</option>
               </Form.Select>
             </div>
+
             <div className='input-container'>
-              {category && <p>Nome ingrediente</p>}
+              {productSubCategory && <p>Sottocategoria Prodotto</p>}
               <Form.Select
                 aria-label='Default select example'
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
+                value={productSubCategory}
+                onChange={(e) => setProductSubCategory(e.target.value)}
                 required
               >
-                <option value=''>Categoria ingrediente</option>
-                <option value='FLOURIES'>Farinosi</option>
-                <option value='VEGETABLES'>Verdure</option>
-                <option value='MEAT'>Carne</option>
-                <option value='CHEESES'>Formaggi</option>
-                <option value='SAUCES'>Salse</option>
+                <option value=''>Sottocategoria prodotto</option>
+                {productCategory &&
+                  productCategory === "DRINK" &&
+                  drinkSubCategory.map((productSubCategory, index) => (
+                    <option value={productSubCategory.value} key={index}>
+                      {productSubCategory.name}
+                    </option>
+                  ))}
+                {productCategory &&
+                  productCategory === "HOT_DISHES" &&
+                  foodSubCategory.map((productSubCategory, index) => (
+                    <option value={productSubCategory.value} key={index}>
+                      {productSubCategory.name}
+                    </option>
+                  ))}
               </Form.Select>
             </div>
-            {category && category === "DRINK" && (
-              <Form.Group as={Col} controlId='validationCustom01' className='pt-5'>
-                <Form.Label>Quantità</Form.Label>
-                <Form.Control required type='text' />
+
+            <div className='input-container d-flex'>
+              <Form.Group as={Col} controlId='validationCustom01' className='d-flex align-items-center'>
+                <Form.Label className='w-100 m-0'>Quantità</Form.Label>
+                <Form.Control
+                  required
+                  type='number'
+                  value={quantity}
+                  disabled={productCategory === "DRINK" ? false : true}
+                  onChange={(e) => setQuantity(e.target.value)}
+                />
               </Form.Group>
-            )}
+            </div>
+            <div className='input-container'>
+              {(isTextVisible.price.value || price) && <p>Prezzo</p>}
+
+              <Form.Group controlId='validationCustom0243'>
+                <Form.Control
+                  required
+                  type='text'
+                  value={price}
+                  placeholder='Prezzo'
+                  onClick={(e) => handleInputFocus("price", e, isTextVisible, setIsTextVisible)}
+                  onBlur={(e) => handleBlur("price", e, isTextVisible, setIsTextVisible)}
+                  onChange={(e) => setPrice(e.target.value)}
+                />
+              </Form.Group>
+            </div>
           </Col>
         </Row>
 
@@ -157,105 +162,33 @@ function ProductForm() {
             <h5 className='text-center'>Panini</h5>
 
             <ToggleButtonGroup type='checkbox' className='my-2 gap-1 d-flex flex-column'>
-              <ToggleButton id='1' value={8} className='rounded-2' onClick={() => addIngredient("Panino bianco")}>
-                Panino bianco
-              </ToggleButton>
-              <ToggleButton id='2' value={9} className='rounded-2' onClick={() => addIngredient("Piadina")}>
-                Piadina
-              </ToggleButton>
-              <ToggleButton id='3' value={10} className='rounded-2' onClick={() => addIngredient("Panino da HotDog")}>
-                Panino da Hotdog
-              </ToggleButton>{" "}
-              <ToggleButton id='4' value={11} className='rounded-2' onClick={() => addIngredient("Panino Hamburger")}>
-                Panino Hamburger
-              </ToggleButton>
+              {allIngredientList && ingredientBtnSpawner(allIngredientList, "FLOURIES", addIngredient, ingredientList)}
             </ToggleButtonGroup>
           </Col>
           <Col>
             <h5 className='text-center'>Verdure</h5>
 
             <ToggleButtonGroup type='checkbox' className='my-2 gap-1 d-flex flex-column'>
-              <ToggleButton id='5' value={1} className='rounded-2' onClick={() => addIngredient("Lattuga")}>
-                Lattuga
-              </ToggleButton>
-              <ToggleButton id='6' value={2} className='rounded-2' onClick={() => addIngredient("Pomodori")}>
-                Pomodori
-              </ToggleButton>
-              <ToggleButton id='7' value={3} className='rounded-2' onClick={() => addIngredient("Cipolle")}>
-                Cipolle
-              </ToggleButton>{" "}
-              <ToggleButton id='8' value={4} className='rounded-2' onClick={() => addIngredient("Cetrioli")}>
-                Cetrioli
-              </ToggleButton>
-              <ToggleButton id='9' value={5} className='rounded-2' onClick={() => addIngredient("Peperoni")}>
-                Peperoni
-              </ToggleButton>
-              <ToggleButton id='10' value={6} className='rounded-2' onClick={() => addIngredient("avocado")}>
-                avocado
-              </ToggleButton>
-              <ToggleButton id='11' value={7} className='rounded-2' onClick={() => addIngredient("olive")}>
-                olive
-              </ToggleButton>
+              {allIngredientList &&
+                ingredientBtnSpawner(allIngredientList, "VEGETABLES", addIngredient, ingredientList)}
             </ToggleButtonGroup>
           </Col>
           <Col>
             <h5 className='text-center'>Carne</h5>
             <ToggleButtonGroup type='checkbox' className='my-2 gap-1 d-flex flex-column'>
-              <ToggleButton id='12' value={16} className='rounded-2' onClick={() => addIngredient("Pollo")}>
-                Pollo
-              </ToggleButton>
-              <ToggleButton id='13' value={18} className='rounded-2' onClick={() => addIngredient("Kebab")}>
-                Kebab
-              </ToggleButton>
-              <ToggleButton id='14' value={19} className='rounded-2' onClick={() => addIngredient("Wurstel")}>
-                Wurstel
-              </ToggleButton>
-              <ToggleButton id='15' value={19} className='rounded-2' onClick={() => addIngredient("Prosciutto cotto")}>
-                Prosciutto cotto
-              </ToggleButton>{" "}
-              <ToggleButton id='16' value={19} className='rounded-2' onClick={() => addIngredient("Salame")}>
-                Salame
-              </ToggleButton>
+              {allIngredientList && ingredientBtnSpawner(allIngredientList, "MEAT", addIngredient, ingredientList)}
             </ToggleButtonGroup>
           </Col>
           <Col>
             <h5 className='text-center'>Formaggi</h5>
             <ToggleButtonGroup type='checkbox' className='my-2 gap-1 d-flex flex-column'>
-              <ToggleButton id='17' value={22} className='rounded-2' onClick={() => addIngredient("Cheddar")}>
-                Cheddar
-              </ToggleButton>
-              <ToggleButton id='18' value={23} className='rounded-2' onClick={() => addIngredient("Mozzarella")}>
-                Mozzarella
-              </ToggleButton>
-              <ToggleButton id='19' value={24} className='rounded-2' onClick={() => addIngredient("Provola")}>
-                Provola
-              </ToggleButton>{" "}
-              <ToggleButton id='20' value={25} className='rounded-2' onClick={() => addIngredient("Formaggio a fette")}>
-                Formaggio a fette
-              </ToggleButton>
+              {allIngredientList && ingredientBtnSpawner(allIngredientList, "CHEESES", addIngredient, ingredientList)}
             </ToggleButtonGroup>
           </Col>
           <Col>
             <h5 className='text-center'>Salse</h5>
             <ToggleButtonGroup type='checkbox' className='my-2 gap-1 d-flex flex-column'>
-              <ToggleButton id='21' value={29} className='rounded-2' onClick={() => addIngredient("Maionese")}>
-                Maionese
-              </ToggleButton>
-              <ToggleButton id='22' value={30} className='rounded-2' onClick={() => addIngredient("Senape")}>
-                Senape
-              </ToggleButton>
-              <ToggleButton id='23' value={31} className='rounded-2' onClick={() => addIngredient("Ketchup")}>
-                Ketchup
-              </ToggleButton>{" "}
-              <ToggleButton id='24' value={32} className='rounded-2' onClick={() => addIngredient("Salsa BBQ")}>
-                Salsa BBQ
-              </ToggleButton>
-              <ToggleButton id='25' value={33} className='rounded-2' onClick={() => addIngredient("Salsa Piccante")}>
-                Salsa Piccante
-              </ToggleButton>
-              <ToggleButton id='26' value={34} className='rounded-2' onClick={() => addIngredient("Salsa Yogurt")}>
-                Salsa Yogurt
-              </ToggleButton>
+              {allIngredientList && ingredientBtnSpawner(allIngredientList, "SAUCES", addIngredient, ingredientList)}
             </ToggleButtonGroup>
           </Col>
           <Col>
@@ -263,14 +196,14 @@ function ProductForm() {
             {ingredientList && (
               <ListGroup>
                 {ingredientList.map((element, index) => (
-                  <ListGroup.Item key={index}>{element}</ListGroup.Item>
+                  <ListGroup.Item key={index}>{element.name}</ListGroup.Item>
                 ))}
               </ListGroup>
             )}
           </Col>
         </Row>
 
-        <Button type='submit' className='mt-5'>
+        <Button className='submit-btn' onClick={handleSubmit}>
           Salva Prodotto
         </Button>
       </Form>

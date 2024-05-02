@@ -25,7 +25,7 @@ export const fetchAllIngredients = (token) => {
 // ---------------------------------SAVE INGREDIENTS----------------------------------
 
 export const saveIngredient = (ingredientName, ingredientCategory, token) => {
-  return async () => {
+  return async (dispatch) => {
     try {
       const resp = await fetch("http://localhost:3001/ingredients/add", {
         method: "POST",
@@ -37,7 +37,8 @@ export const saveIngredient = (ingredientName, ingredientCategory, token) => {
       });
 
       if (resp.ok) {
-        console.log("aggiunto");
+        const data = await resp.json();
+        dispatch({ type: GET_INGREDIENT_LIST, payload: data });
       }
     } catch (error) {
       console.log(error);

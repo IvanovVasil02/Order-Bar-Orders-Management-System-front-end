@@ -1,4 +1,4 @@
-import { Button, Card, Col } from "react-bootstrap";
+import { Card, Col } from "react-bootstrap";
 import { CiCirclePlus } from "react-icons/ci";
 import { CiCircleMinus } from "react-icons/ci";
 
@@ -7,15 +7,15 @@ const ProductCard = (props) => {
     <Col>
       <Card>
         <Card.Body>
-          <Card.Title>Card Title</Card.Title>
-          <Card.Text>
-            Some quick example text to build on the card title and make up the bulk of the card's content.
+          <Card.Title>{props.title}</Card.Title>
+          <Card.Text className='d-flex gap-2'>
+            {props.ingredients && props.ingredients.map((element, index) => <span key={index}>{element.name}</span>)}
           </Card.Text>
           <div className='d-flex  justify-content-between pointer'>
-            <p>Aggiunti: 4</p>
+            <p>Aggiunti: {props.quantity}</p>
             <div className='d-flex gap-3 fs-1 fw-light pointer'>
-              <CiCirclePlus />
-              <CiCircleMinus />
+              <CiCirclePlus onClick={props.addFunction} />
+              <CiCircleMinus onClick={props.removeFunction} />
             </div>
           </div>
         </Card.Body>

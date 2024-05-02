@@ -42,7 +42,7 @@ function IngedientForm() {
         <div className='input-container'>
           {(isTextVisible.ingredient.value || ingredientName) && <p>Nome ingrediente</p>}
 
-          <Form.Group as={Col} controlId='validationCustom0232'>
+          <Form.Group as={Col} controlId='validationCustom023223'>
             <Form.Control
               required
               type='text'

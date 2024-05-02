@@ -1,4 +1,4 @@
-import { SAVED_TOKEN } from "../actions/AuthenticationActions";
+import { SAVED_TOKEN } from "../actions/authenticationActions";
 
 const mainState = {
   savedToken: null,
