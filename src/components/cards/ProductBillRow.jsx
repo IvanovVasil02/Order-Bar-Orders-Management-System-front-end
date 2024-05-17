@@ -1,18 +1,20 @@
-import { IoIosAddCircleOutline } from "react-icons/io";
-import { IoIosRemoveCircleOutline } from "react-icons/io";
+import { LuPlus } from "react-icons/lu";
+import { LuMinus } from "react-icons/lu";
 
 const ProductBillRow = (props) => {
   return (
     <>
       <tr className='pointer td-bg'>
-        <td>{props.product.quantity}</td>
+        <td>
+          {props.product.quantity} {props.product.paidQuantity > 0 && `(${props.product.paidQuantity})`}
+        </td>
         <td>{props.product.name}</td>
         <td>{props.product.price}€</td>
         <td>
-          <IoIosAddCircleOutline className='fs-1' onClick={props.addFunction} />
+          <LuPlus className='fs-1 modal-btn shadow-sm' onClick={props.addFunction} />
         </td>
         <td>
-          <IoIosRemoveCircleOutline className='fs-1' onClick={props.removeFunction} />
+          <LuMinus className='fs-1  modal-btn shadow-sm' onClick={props.removeFunction} />
         </td>
       </tr>
     </>

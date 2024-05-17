@@ -29,7 +29,7 @@ const DinnerBill = (props) => {
             </tbody>
           </Table>
 
-          <div>
+          <div className='px-2'>
             <h5>Totale da pagare: {props.data.totalPrice}€</h5>
             <h5>Restante da pagare: {props.data.remainingToPay}€</h5>
           </div>

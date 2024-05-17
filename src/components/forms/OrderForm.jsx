@@ -5,7 +5,7 @@ import Table from "../Table";
 import { fetchAllTables } from "../redux/actions/tablesActions";
 import { Row } from "react-bootstrap";
 
-function OrderForm() {
+function OrderForm(props) {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.main.savedToken);
 
@@ -18,13 +18,13 @@ function OrderForm() {
   const tables = useSelector((state) => state.tables.tableList);
 
   return (
-    <>
-      <h2 className='mt-5'>Aggiungi Ordine</h2>
+    <div className={`text-center ${props.isVisible ? "d-block" : "d-none"}`}>
+      <h2 className='my-5'>Aggiungi Ordine</h2>
 
-      <Row className='button-container pt-3 row-cols-3'>
+      <Row className='button-container pt-3 row-cols-3 w-100'>
         {tables && tables.map((table, index) => <Table key={index} table={table} />)}
       </Row>
-    </>
+    </div>
   );
 }
 

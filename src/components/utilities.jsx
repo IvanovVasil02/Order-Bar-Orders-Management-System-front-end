@@ -24,12 +24,16 @@ export const clearFields = (arrayFields, validationFunction) => {
   });
 };
 
-export const ingredientBtnSpawner = (array, condition, btnFunction, arrayToCheck) => {
+export const capitalizeFirstLetter = (string) => {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+};
+
+export const btnSpawner = (array, nameCategory, condition, btnFunction, arrayToCheck) => {
   return array
-    .filter((element) => element.ingredientCategory === condition)
+    .filter((element) => element[nameCategory] === condition)
     .map((element, index) => (
       <ToggleButton
-        className={`choise-btn ${arrayToCheck.includes(element) && "choise-btn-selected"}`}
+        className={`choise-btn ${arrayToCheck?.includes(element) && "choise-btn-selected"}`}
         onClick={() => btnFunction(element)}
         key={index}
       >
@@ -37,6 +41,7 @@ export const ingredientBtnSpawner = (array, condition, btnFunction, arrayToCheck
       </ToggleButton>
     ));
 };
+
 export const productCardSpawner = (array, condition, addFunction, removeFunction, getOrderedQuantityProduct) => {
   return array
     .filter((element) => element.subCategory === condition)

@@ -22,7 +22,7 @@ const Table = (props) => {
 
   return (
     <>
-      <Col className='p-2'>
+      <Col className='p-md-3'>
         <Button
           className={props.table.tableState === "FREE" ? "choise-btn" : "choise-btn-selected "}
           data-value={props.table.tableNumber}

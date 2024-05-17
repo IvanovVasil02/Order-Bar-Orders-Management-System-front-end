@@ -1,17 +1,21 @@
 import { useEffect, useState } from "react";
-import { ListGroup, Row, ToggleButtonGroup } from "react-bootstrap";
+import { ButtonGroup, ListGroup, Row, ToggleButton, ToggleButtonGroup } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllIngredients } from "../redux/actions/ingredientsActions";
-import { handleBlur, handleInputFocus, ingredientBtnSpawner } from "../utilities";
+import { handleBlur, handleInputFocus, btnSpawner } from "../utilities";
 import { saveProduct } from "../redux/actions/productActions";
+import { FaRegArrowAltCircleRight } from "react-icons/fa";
+import HotdishesList from "../itemList/HotDishesList";
+import DrinkList from "../itemList/DrinkList";
 
-function ProductForm() {
+function ProductForm(props) {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.main.savedToken);
   const allIngredientList = useSelector((state) => state.ingredients.ingredientList);
+  const allProducts = useSelector((state) => state.products.productList);
   const [productName, setProductName] = useState("");
   const [productCategory, setProductCategory] = useState("");
   const [productSubCategory, setProductSubCategory] = useState("");
@@ -65,12 +69,19 @@ function ProductForm() {
       : setIngredientList([...ingredientList, value]);
   };
 
+  const [radioValue, setRadioValue] = useState("1");
+
+  const radios = [
+    { name: "Piatti caldi", value: "1" },
+    { name: "Da bere", value: "2" },
+  ];
+
   return (
-    <>
-      <h2 className='mt-5'>Creia nuovo Prodotto</h2>
-      <Form as={Col} noValidate validated={validated} className='m-5 w-lg-50 d-flex flex-column gap-4'>
-        <Row>
-          <Col lg={12} className='d-flex flex-column flex-lg-row justify-content-center align-items-center gap-4'>
+    <div className={`text-center ${props.isVisible ? "d-block" : "d-none"}`}>
+      <h2 className='my-5'>Creia un nuovo Prodotto</h2>
+      <Form as={Col} noValidate validated={validated} className='d-flex flex-column align-items-center'>
+        <Row className='row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xxl-5 g-3 justify-content-center px-2 p-md-0'>
+          <Col>
             <div className='input-container'>
               {(isTextVisible.product.value || productName) && <p>Nome prodotto</p>}
 
@@ -86,7 +97,9 @@ function ProductForm() {
                 />
               </Form.Group>
             </div>
+          </Col>
 
+          <Col>
             <div className='input-container'>
               {productCategory && <p>Categoria prodotto</p>}
               <Form.Select
@@ -100,7 +113,9 @@ function ProductForm() {
                 <option value='HOT_DISHES'>Cibo Caldo</option>
               </Form.Select>
             </div>
+          </Col>
 
+          <Col>
             <div className='input-container'>
               {productSubCategory && <p>Sottocategoria Prodotto</p>}
               <Form.Select
@@ -126,8 +141,10 @@ function ProductForm() {
                   ))}
               </Form.Select>
             </div>
+          </Col>
 
-            <div className='input-container d-flex'>
+          <Col>
+            <div className='input-container'>
               <Form.Group as={Col} controlId='validationCustom01' className='d-flex align-items-center'>
                 <Form.Label className='w-100 m-0'>Quantità</Form.Label>
                 <Form.Control
@@ -139,6 +156,9 @@ function ProductForm() {
                 />
               </Form.Group>
             </div>
+          </Col>
+
+          <Col>
             <div className='input-container'>
               {(isTextVisible.price.value || price) && <p>Prezzo</p>}
 
@@ -162,7 +182,8 @@ function ProductForm() {
             <h5 className='text-center'>Panini</h5>
 
             <ToggleButtonGroup type='checkbox' className='my-2 gap-1 d-flex flex-column'>
-              {allIngredientList && ingredientBtnSpawner(allIngredientList, "FLOURIES", addIngredient, ingredientList)}
+              {allIngredientList &&
+                btnSpawner(allIngredientList, "ingredientCategory", "FLOURIES", addIngredient, ingredientList)}
             </ToggleButtonGroup>
           </Col>
           <Col>
@@ -170,33 +191,37 @@ function ProductForm() {
 
             <ToggleButtonGroup type='checkbox' className='my-2 gap-1 d-flex flex-column'>
               {allIngredientList &&
-                ingredientBtnSpawner(allIngredientList, "VEGETABLES", addIngredient, ingredientList)}
+                btnSpawner(allIngredientList, "ingredientCategory", "VEGETABLES", addIngredient, ingredientList)}
             </ToggleButtonGroup>
           </Col>
           <Col>
             <h5 className='text-center'>Carne</h5>
             <ToggleButtonGroup type='checkbox' className='my-2 gap-1 d-flex flex-column'>
-              {allIngredientList && ingredientBtnSpawner(allIngredientList, "MEAT", addIngredient, ingredientList)}
+              {allIngredientList &&
+                btnSpawner(allIngredientList, "ingredientCategory", "MEAT", addIngredient, ingredientList)}
             </ToggleButtonGroup>
           </Col>
           <Col>
             <h5 className='text-center'>Formaggi</h5>
             <ToggleButtonGroup type='checkbox' className='my-2 gap-1 d-flex flex-column'>
-              {allIngredientList && ingredientBtnSpawner(allIngredientList, "CHEESES", addIngredient, ingredientList)}
+              {allIngredientList &&
+                btnSpawner(allIngredientList, "ingredientCategory", "CHEESES", addIngredient, ingredientList)}
             </ToggleButtonGroup>
           </Col>
           <Col>
             <h5 className='text-center'>Salse</h5>
             <ToggleButtonGroup type='checkbox' className='my-2 gap-1 d-flex flex-column'>
-              {allIngredientList && ingredientBtnSpawner(allIngredientList, "SAUCES", addIngredient, ingredientList)}
+              {allIngredientList &&
+                btnSpawner(allIngredientList, "ingredientCategory", "SAUCES", addIngredient, ingredientList)}
             </ToggleButtonGroup>
           </Col>
           <Col>
-            <h5>Ingredienti</h5>
             {ingredientList && (
               <ListGroup>
                 {ingredientList.map((element, index) => (
-                  <ListGroup.Item key={index}>{element.name}</ListGroup.Item>
+                  <ListGroup.Item key={index} className='m-1 rounded-4 shadow-sm'>
+                    {element.name}
+                  </ListGroup.Item>
                 ))}
               </ListGroup>
             )}
@@ -204,10 +229,36 @@ function ProductForm() {
         </Row>
 
         <Button className='submit-btn' onClick={handleSubmit}>
-          Salva Prodotto
+          Salva
+          <FaRegArrowAltCircleRight className='ms-auto' />
         </Button>
       </Form>
-    </>
+      {allProducts && (
+        <Row className='pt-5'>
+          <Col sm={12} className='py-5'>
+            <ButtonGroup>
+              {radios.map((radio, idx) => (
+                <ToggleButton
+                  key={idx}
+                  id={`radio-${idx}`}
+                  type='radio'
+                  variant={idx % 2 ? "outline-success" : "outline-danger"}
+                  name='radio'
+                  value={radio.value}
+                  checked={radioValue === radio.value}
+                  onChange={(e) => setRadioValue(e.currentTarget.value)}
+                >
+                  {radio.name}
+                </ToggleButton>
+              ))}
+            </ButtonGroup>
+          </Col>
+
+          {radioValue == 1 && <HotdishesList productList={allProducts} />}
+          {radioValue == 2 && <DrinkList productList={allProducts} />}
+        </Row>
+      )}
+    </div>
   );
 }
 

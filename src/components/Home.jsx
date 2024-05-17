@@ -1,11 +1,12 @@
-import Header from "./Header";
-import NavigationBar from "./NavigationBar";
+import Main from "./Main";
+
+// import AddIngredientPage from "./AddIngredientPage";
 
 const Home = () => {
   return (
     <>
-      <NavigationBar />
-      <Header />
+      <Main />
+      {/* <AddIngredientPage /> */}
     </>
   );
 };

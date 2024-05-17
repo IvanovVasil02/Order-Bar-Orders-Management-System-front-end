@@ -1,3 +1,5 @@
+import { fetchAllTables } from "./tablesActions";
+
 export const GET_ORDER_LIST = "GET_ORDER_LIST";
 // ---------------------------------GET ALL ORDERS----------------------------------
 
@@ -27,7 +29,7 @@ export const saveOrder = (tableId, note, productList1, token) => {
   return async (dispatch) => {
     try {
       const productList = productList1.map((elm) => ({
-        productId: elm.id,
+        id: elm.id,
         quantity: elm.quantity,
         note: "nope",
       }));
@@ -44,6 +46,74 @@ export const saveOrder = (tableId, note, productList1, token) => {
       if (resp.ok) {
         const data = await resp.json();
         dispatch({ type: GET_ORDER_LIST, payload: data });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+// ---------------------------------ADD TO ORDER----------------------------------
+
+export const addToOrder = (orderId, product, token) => {
+  return async (dispatch) => {
+    try {
+      const resp = await fetch("http://localhost:3001/orders/addToOrder/" + orderId, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify({ id: product.id, quantity: 1, note: "" }),
+      });
+
+      if (resp.ok) {
+        dispatch(fetchAllTables(token));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+// ---------------------------------PAY PARTIAL ORDER----------------------------------
+
+export const payPartialOrder = (orderId, product, token) => {
+  return async (dispatch) => {
+    try {
+      const resp = await fetch("http://localhost:3001/orders/payPartialOrder/" + orderId, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify({ id: product.id, quantity: 1, note: "" }),
+      });
+
+      if (resp.ok) {
+        dispatch(fetchAllTables(token));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+// ---------------------------------PAY/CLOSE ORDER----------------------------------
+
+export const closeOrder = (orderId, token) => {
+  return async (dispatch) => {
+    try {
+      const resp = await fetch("http://localhost:3001/orders/payOrder/" + orderId, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+      });
+
+      if (resp.ok) {
+        dispatch(fetchAllTables(token));
       }
     } catch (error) {
       console.log(error);

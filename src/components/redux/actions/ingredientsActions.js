@@ -45,3 +45,48 @@ export const saveIngredient = (ingredientName, ingredientCategory, token) => {
     }
   };
 };
+
+// ---------------------------------EDIT INGREDIENTS----------------------------------
+
+export const editIngredient = (ingredientId, ingredientName, ingredientCategory, token) => {
+  return async (dispatch) => {
+    try {
+      const resp = await fetch("http://localhost:3001/ingredients/edit?ingredientId=" + ingredientId, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify({ ingredientName, ingredientCategory }),
+      });
+
+      if (resp.ok) {
+        const data = await resp.json();
+        dispatch({ type: GET_INGREDIENT_LIST, payload: data });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+// ---------------------------------DELETE INGREDIENTS----------------------------------
+
+export const deleteIngredient = (ingredientId, token) => {
+  return async (dispatch) => {
+    try {
+      const resp = await fetch("http://localhost:3001/ingredients/delete?ingredientId=" + ingredientId, {
+        method: "DELETE",
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
+
+      if (resp.ok) {
+        dispatch(fetchAllIngredients(token));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};

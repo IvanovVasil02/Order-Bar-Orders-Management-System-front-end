@@ -16,14 +16,15 @@ import beer from "../../assets/beer.png";
 import mocktails from "../../assets/mocktails.png";
 
 import { useEffect, useState } from "react";
-import { IoIosAddCircleOutline } from "react-icons/io";
-import { IoIosCloseCircleOutline } from "react-icons/io";
-import { MdOutlinePlaylistAddCheckCircle } from "react-icons/md";
-import { IoIosArrowDropleft } from "react-icons/io";
+import { LuPlus } from "react-icons/lu";
+import { IoClose } from "react-icons/io5";
+import { CiCircleList } from "react-icons/ci";
+import { MdChevronLeft } from "react-icons/md";
+
 import { useDispatch, useSelector } from "react-redux";
 import { productCardSpawner } from "../utilities";
 import DinnerBill from "./DinnerBill";
-import { saveOrder } from "../redux/actions/ordersActions";
+import { addToOrder, closeOrder, payPartialOrder, saveOrder } from "../redux/actions/ordersActions";
 
 const CreateOrderModal = (props) => {
   const dispatch = useDispatch();
@@ -42,7 +43,7 @@ const CreateOrderModal = (props) => {
   ];
   const drinksCtg = [
     { name: "Succhi", category: "JUICES", img: juices },
-    { name: "Gassate", category: "HAMBURGER", img: sodas },
+    { name: "Gassate", category: "SODAS", img: sodas },
     { name: "Té", category: "TEA", img: tea },
     { name: "Birre", category: "BEER", img: beer },
     { name: "Cocktails", category: "COCKTAILS", img: cocktail },
@@ -81,45 +82,51 @@ const CreateOrderModal = (props) => {
   }, [props.table]);
 
   const handleAddToOrder = (value) => {
-    const productObject = { id: value.id, quantity: 1, name: value.name, price: value.price };
-
     const existingProductIndex = order.productList.findIndex((item) => item.id === value.id);
-
-    if (existingProductIndex !== -1) {
-      const updatedOrder = order.productList.map((product, index) =>
-        index === existingProductIndex ? { ...product, quantity: product.quantity + 1 } : product
-      );
-
-      setOrder({
-        ...order,
-        productList: updatedOrder,
-        totalPrice: calcAmount(value),
-        remainingToPay: calcAmount() + value.price,
-      });
+    if (props.table.order) {
+      dispatch(addToOrder(props.table.order.order_id, order.productList[existingProductIndex], token));
     } else {
-      setOrder({
-        ...order,
-        productList: [...order.productList, productObject],
-        totalPrice: calcAmount(value),
-        remainingToPay: calcAmount(),
-      });
+      const productObject = { id: value.id, quantity: 1, name: value.name, price: value.price };
+
+      if (existingProductIndex !== -1) {
+        const updatedOrder = order.productList.map((product, index) =>
+          index === existingProductIndex ? { ...product, quantity: product.quantity + 1 } : product
+        );
+
+        setOrder({
+          ...order,
+          productList: updatedOrder,
+          totalPrice: calcAmount(value),
+          remainingToPay: calcAmount() + value.price,
+        });
+      } else {
+        setOrder({
+          ...order,
+          productList: [...order.productList, productObject],
+          totalPrice: calcAmount(value),
+          remainingToPay: calcAmount(),
+        });
+      }
     }
   };
 
   const handleRemoveFromOrder = (idToRemove) => {
     const existingProductIndex = order.productList.findIndex((item) => item.id === idToRemove);
+    if (props.table.order) {
+      dispatch(payPartialOrder(props.table.order.order_id, order.productList[existingProductIndex], token));
+    } else {
+      if (existingProductIndex != -1) {
+        const updatedOrder = order.productList
+          .map((product) => (product.id === idToRemove ? { ...product, quantity: product.quantity - 1 } : product))
+          .filter((product) => product.quantity > 0);
 
-    if (existingProductIndex != -1) {
-      const updatedOrder = order.productList
-        .map((product) => (product.id === idToRemove ? { ...product, quantity: product.quantity - 1 } : product))
-        .filter((product) => product.quantity > 0);
-
-      setOrder({
-        ...order,
-        productList: updatedOrder,
-        totalPrice: order.totalPrice,
-        remainingToPay: calcAmount() - order.productList[existingProductIndex].price,
-      });
+        setOrder({
+          ...order,
+          productList: updatedOrder,
+          totalPrice: order.totalPrice,
+          remainingToPay: calcAmount() - order.productList[existingProductIndex].price,
+        });
+      }
     }
   };
 
@@ -147,7 +154,10 @@ const CreateOrderModal = (props) => {
   };
 
   const handleSaveOrder = () => {
-    dispatch(saveOrder(props.table.table_id, "note", order, token));
+    dispatch(saveOrder(props.table.table_id, "note", order.productList, token));
+  };
+  const handleCloseOrder = () => {
+    dispatch(closeOrder(props.table.order.order_id, token));
   };
 
   const handleSelectCategory = (selectedCategory) => {
@@ -186,9 +196,14 @@ const CreateOrderModal = (props) => {
       <Modal show={props.showCreateOrderModal} onHide={handleCloseModal} size='lg' className=' pb-3'>
         <Modal.Header>
           <Modal.Title>Tavolo N° {props.table.tableNumber}</Modal.Title>
-          <IoIosAddCircleOutline className='fs-1 ms-auto pointer' onClick={handleCloseBill} />
-          <MdOutlinePlaylistAddCheckCircle className='fs-1 ms-2 pointer' onClick={handleShowBill} />
-          <IoIosCloseCircleOutline className='fs-1 ms-2 pointer' onClick={props.handleCloseCreateOrderModal} />
+          {showBill ? (
+            <LuPlus className='modal-btn fs-1 ms-auto pointer' onClick={handleCloseBill} />
+          ) : (
+            <MdChevronLeft className='modal-btn  fs-1 ms-auto pointer' onClick={() => goBack()} />
+          )}
+
+          <CiCircleList className='modal-btn fs-1 ms-2 pointer' onClick={handleShowBill} />
+          <IoClose className='modal-btn fs-1 ms-2 pointer' onClick={props.handleCloseCreateOrderModal} />
         </Modal.Header>
         <Modal.Body className='pb-5'>
           {!showBill && (
@@ -207,14 +222,12 @@ const CreateOrderModal = (props) => {
                     titleCategory='Cibi caldi'
                     selectProductFunction={handleSelectCategory}
                     category='HOT_DISHES'
-                    padding='5'
                   />
                   <ProductsCategorycard
                     ctgImg={bibite}
                     titleCategory='Da bere'
                     selectProductFunction={handleSelectCategory}
                     category='DRINK'
-                    padding='5'
                   />{" "}
                 </Row>
                 {/* HOT DISHES */}
@@ -283,15 +296,13 @@ const CreateOrderModal = (props) => {
             )}
           </Row>
         </Modal.Body>
-        <Modal.Footer>
-          <IoIosArrowDropleft className='me-auto fs-1 pointer' onClick={() => goBack()} />
-          <Button className='submit-btn fs-5 p-1' onClick={props.handleCloseCreateOrderModal}>
-            Close
-          </Button>
-          <Button className='submit-btn fs-5 p-1' onClick={handleSaveOrder}>
-            Salva ordine
-          </Button>
-        </Modal.Footer>
+        {showBill && (
+          <Modal.Footer className='justify-content-center border-0'>
+            <Button className='submit-btn fs-5 p-1' onClick={props.table.order ? handleCloseOrder : handleSaveOrder}>
+              {props.table.order ? "Chiudi/Paga Conto" : "Salva ordine"}
+            </Button>
+          </Modal.Footer>
+        )}
       </Modal>
     </>
   );

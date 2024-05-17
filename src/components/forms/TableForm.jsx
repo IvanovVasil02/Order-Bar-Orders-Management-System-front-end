@@ -7,7 +7,7 @@ import { FaRegArrowAltCircleRight } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { createTables } from "../redux/actions/tablesActions";
 
-function TableForm() {
+function TableForm(props) {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.main.savedToken);
   const [validated, setValidated] = useState(false);
@@ -29,9 +29,15 @@ function TableForm() {
   };
 
   return (
-    <>
-      <h2>Creia Tavoli</h2>
-      <Form noValidate validated={validated} as={Col} className='m-5 w-lg-50 d-flex flex-column gap-4' required>
+    <div className={`text-center ${props.isVisible ? "d-block" : "d-none"}`}>
+      <h2 className='my-5'>Creia Tavoli</h2>
+      <Form
+        noValidate
+        validated={validated}
+        as={Col}
+        className='m-5 w-lg-50 d-flex flex-column align-items-center gap-4'
+        required
+      >
         <div className='input-container'>
           {(isTextVisible.table.value || num) && <p>Numero tavoli</p>}
 
@@ -49,10 +55,10 @@ function TableForm() {
         </div>
 
         <Button onClick={handleSubmit} className='submit-btn'>
-          Crea tavoli <FaRegArrowAltCircleRight className='ms-auto' />
+          Crea <FaRegArrowAltCircleRight className='ms-auto' />
         </Button>
       </Form>
-    </>
+    </div>
   );
 }
 
