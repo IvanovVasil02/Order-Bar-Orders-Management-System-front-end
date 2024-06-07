@@ -1,12 +1,12 @@
 import { fetchAllTables } from "./tablesActions";
 
 export const GET_ORDER_LIST = "GET_ORDER_LIST";
-// ---------------------------------GET ALL ORDERS----------------------------------
+// ---------------------------------GET ALL ORDERS BY DATE ----------------------------------
 
-export const fetchAllOrders = (token) => {
+export const fetchAllOrders = (token, date) => {
   return async (dispatch) => {
     try {
-      const resp = await fetch("http://localhost:3001/orders", {
+      const resp = await fetch("http://localhost:3001/orders?date=" + date, {
         method: "GET",
         headers: {
           Authorization: "Bearer " + token,
@@ -34,7 +34,7 @@ export const saveOrder = (tableId, note, productList1, token) => {
         note: "nope",
       }));
 
-      const resp = await fetch("http://localhost:3001/orders/add", {
+      const resp = await fetch("http://localhost:3001/orders", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

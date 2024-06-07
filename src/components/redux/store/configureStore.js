@@ -7,6 +7,7 @@ import productsReducer from "../reducers/productsReducer";
 import tablesReducer from "../reducers/tablesReducer";
 import { persistReducer, persistStore } from "redux-persist";
 import { encryptTransform } from "redux-persist-transform-encrypt";
+import ordersReducer from "../reducers/ordersReducer";
 const persistConfig = {
   key: "root",
   storage,
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
   ingredients: ingredientsReducer,
   products: productsReducer,
   tables: tablesReducer,
+  orders: ordersReducer,
 });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

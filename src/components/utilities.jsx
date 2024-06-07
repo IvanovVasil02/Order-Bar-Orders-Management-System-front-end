@@ -56,3 +56,22 @@ export const productCardSpawner = (array, condition, addFunction, removeFunction
       />
     ));
 };
+
+export function extractTime(dateTimeStr) {
+  if (dateTimeStr.includes("T")) {
+    const timeStr = dateTimeStr.split("T")[1];
+    return timeStr.split(".")[0];
+  } else {
+    return "";
+  }
+}
+
+export function extractDate(dateTimeStr) {
+  if (dateTimeStr.includes("T")) {
+    const dateStr = dateTimeStr.split("T")[0];
+    const [year, month, day] = dateStr.split("-");
+    return `${day}-${month}-${year}`;
+  } else {
+    return "";
+  }
+}

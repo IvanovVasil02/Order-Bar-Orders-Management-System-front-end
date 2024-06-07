@@ -22,7 +22,7 @@ function OrderForm(props) {
       <h2 className='my-5'>Aggiungi Ordine</h2>
 
       <Row className='button-container pt-3 row-cols-3 w-100'>
-        {tables && tables.map((table, index) => <Table key={index} table={table} />)}
+        {tables && tables.map((table, index) => <Table key={index} table={table} editable={true} />)}
       </Row>
     </div>
   );

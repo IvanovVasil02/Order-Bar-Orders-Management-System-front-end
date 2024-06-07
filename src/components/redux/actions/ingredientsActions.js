@@ -27,7 +27,7 @@ export const fetchAllIngredients = (token) => {
 export const saveIngredient = (ingredientName, ingredientCategory, token) => {
   return async (dispatch) => {
     try {
-      const resp = await fetch("http://localhost:3001/ingredients/add", {
+      const resp = await fetch("http://localhost:3001/ingredients", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -51,7 +51,7 @@ export const saveIngredient = (ingredientName, ingredientCategory, token) => {
 export const editIngredient = (ingredientId, ingredientName, ingredientCategory, token) => {
   return async (dispatch) => {
     try {
-      const resp = await fetch("http://localhost:3001/ingredients/edit?ingredientId=" + ingredientId, {
+      const resp = await fetch("http://localhost:3001/ingredients?ingredientId=" + ingredientId, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -75,7 +75,7 @@ export const editIngredient = (ingredientId, ingredientName, ingredientCategory,
 export const deleteIngredient = (ingredientId, token) => {
   return async (dispatch) => {
     try {
-      const resp = await fetch("http://localhost:3001/ingredients/delete?ingredientId=" + ingredientId, {
+      const resp = await fetch("http://localhost:3001/ingredients?ingredientId=" + ingredientId, {
         method: "DELETE",
         headers: {
           Authorization: "Bearer " + token,

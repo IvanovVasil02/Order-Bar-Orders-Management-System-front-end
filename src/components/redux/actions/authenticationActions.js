@@ -1,6 +1,7 @@
 import { jwtDecode } from "jwt-decode";
 
 export const SAVED_TOKEN = "SAVED_TOKEN";
+export const LOGOUT = "LOGOUT";
 
 export const fetchLogin = (email, password) => {
   return async (dispatch) => {
@@ -18,7 +19,6 @@ export const fetchLogin = (email, password) => {
 
       if (response.ok) {
         const resp = await response.json();
-        console.log(resp);
         await dispatch({ type: SAVED_TOKEN, payload: resp.token });
 
         const decodedToken = jwtDecode(resp.token);
@@ -35,3 +35,8 @@ export const fetchLogin = (email, password) => {
     }
   };
 };
+
+export const logout = () => (dispatch) =>
+  dispatch({
+    type: LOGOUT,
+  });

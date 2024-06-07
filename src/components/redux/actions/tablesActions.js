@@ -45,3 +45,25 @@ export const createTables = (num, token) => {
     }
   };
 };
+
+// ---------------------------------DELETE TABLE----------------------------------
+
+export const deleteTable = (num, token) => {
+  return async (dispatch) => {
+    try {
+      const resp = await fetch("http://localhost:3001/tables/" + num, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+      });
+
+      if (resp.ok) {
+        dispatch(fetchAllTables(token));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};

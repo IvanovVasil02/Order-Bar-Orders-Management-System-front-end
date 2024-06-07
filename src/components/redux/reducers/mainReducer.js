@@ -1,4 +1,4 @@
-import { SAVED_TOKEN } from "../actions/authenticationActions";
+import { LOGOUT, SAVED_TOKEN } from "../actions/authenticationActions";
 
 const mainState = {
   savedToken: null,
@@ -10,6 +10,11 @@ const mainReducer = (state = mainState, action) => {
       return {
         ...state,
         savedToken: action.payload,
+      };
+    case LOGOUT:
+      return {
+        ...state,
+        savedToken: null,
       };
 
     default:

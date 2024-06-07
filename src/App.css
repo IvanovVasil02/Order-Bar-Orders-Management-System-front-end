@@ -119,8 +119,6 @@ body {
 }
 
 
-
-
 .form-control {
   box-shadow: none !important;
 }
@@ -137,7 +135,6 @@ body {
   border-radius: 18px !important;
   padding: 5px !important;
   margin-block: 10px;
-  width: 50%;
   box-shadow: 2px 4px 12px #00000014;
 }
 
@@ -256,4 +253,14 @@ th {
 td {
   font-weight: 200;
   background-color: inherit !important;
+}
+
+.list-item {
+  display: flex !important;
+  justify-content: space-evenly;
+  border-radius: 20px !important;
+  width: 100%;
+  box-shadow: 2px 4px 12px #00000014;
+  margin-block: 5px;
+  font-size: 1.1rem !important;
 }

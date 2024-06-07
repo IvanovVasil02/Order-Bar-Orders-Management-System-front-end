@@ -1,21 +1,15 @@
-import { useEffect, useState } from "react";
-import { ButtonGroup, ListGroup, Row, ToggleButton, ToggleButtonGroup } from "react-bootstrap";
-import Button from "react-bootstrap/Button";
-import Col from "react-bootstrap/Col";
-import Form from "react-bootstrap/Form";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchAllIngredients } from "../redux/actions/ingredientsActions";
-import { handleBlur, handleInputFocus, btnSpawner } from "../utilities";
-import { saveProduct } from "../redux/actions/productActions";
+import { Button, Col, Form, Row } from "react-bootstrap";
+import { handleBlur, handleInputFocus } from "../utilities";
+import IngredientList from "../itemList/IngredientList";
 import { FaRegArrowAltCircleRight } from "react-icons/fa";
-import HotdishesList from "../itemList/HotDishesList";
-import DrinkList from "../itemList/DrinkList";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { fetchAllIngredients } from "../redux/actions/ingredientsActions";
+import { saveProduct } from "../redux/actions/productActions";
 
-function ProductForm(props) {
+const ProductForm = (props) => {
   const dispatch = useDispatch();
-  const token = useSelector((state) => state.main.savedToken);
   const allIngredientList = useSelector((state) => state.ingredients.ingredientList);
-  const allProducts = useSelector((state) => state.products.productList);
   const [productName, setProductName] = useState("");
   const [productCategory, setProductCategory] = useState("");
   const [productSubCategory, setProductSubCategory] = useState("");
@@ -47,9 +41,8 @@ function ProductForm(props) {
   });
 
   useEffect(() => {
-    dispatch(fetchAllIngredients(token));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    dispatch(fetchAllIngredients(props.token));
+  }, [props.token, dispatch]);
 
   const [validated, setValidated] = useState(false);
 
@@ -59,7 +52,10 @@ function ProductForm(props) {
     if (form.checkValidity() === false) {
       event.stopPropagation();
     }
-    dispatch(saveProduct(productCategory, productSubCategory, productName, price, quantity, ingredientList, token));
+    dispatch(
+      saveProduct(productCategory, productSubCategory, productName, price, quantity, ingredientList, props.token)
+    );
+    props.setThereIsUpdate(true);
     setValidated(true);
   };
 
@@ -69,17 +65,9 @@ function ProductForm(props) {
       : setIngredientList([...ingredientList, value]);
   };
 
-  const [radioValue, setRadioValue] = useState("1");
-
-  const radios = [
-    { name: "Piatti caldi", value: "1" },
-    { name: "Da bere", value: "2" },
-  ];
-
   return (
-    <div className={`text-center ${props.isVisible ? "d-block" : "d-none"}`}>
-      <h2 className='my-5'>Creia un nuovo Prodotto</h2>
-      <Form as={Col} noValidate validated={validated} className='d-flex flex-column align-items-center'>
+    <>
+      <Form as={Col} noValidate validated={validated} className='d-flex flex-column py-5'>
         <Row className='row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xxl-5 g-3 justify-content-center px-2 p-md-0'>
           <Col>
             <div className='input-container'>
@@ -177,89 +165,24 @@ function ProductForm(props) {
           </Col>
         </Row>
 
-        <Row className='pt-5'>
-          <Col>
-            <h5 className='text-center'>Panini</h5>
-
-            <ToggleButtonGroup type='checkbox' className='my-2 gap-1 d-flex flex-column'>
-              {allIngredientList &&
-                btnSpawner(allIngredientList, "ingredientCategory", "FLOURIES", addIngredient, ingredientList)}
-            </ToggleButtonGroup>
-          </Col>
-          <Col>
-            <h5 className='text-center'>Verdure</h5>
-
-            <ToggleButtonGroup type='checkbox' className='my-2 gap-1 d-flex flex-column'>
-              {allIngredientList &&
-                btnSpawner(allIngredientList, "ingredientCategory", "VEGETABLES", addIngredient, ingredientList)}
-            </ToggleButtonGroup>
-          </Col>
-          <Col>
-            <h5 className='text-center'>Carne</h5>
-            <ToggleButtonGroup type='checkbox' className='my-2 gap-1 d-flex flex-column'>
-              {allIngredientList &&
-                btnSpawner(allIngredientList, "ingredientCategory", "MEAT", addIngredient, ingredientList)}
-            </ToggleButtonGroup>
-          </Col>
-          <Col>
-            <h5 className='text-center'>Formaggi</h5>
-            <ToggleButtonGroup type='checkbox' className='my-2 gap-1 d-flex flex-column'>
-              {allIngredientList &&
-                btnSpawner(allIngredientList, "ingredientCategory", "CHEESES", addIngredient, ingredientList)}
-            </ToggleButtonGroup>
-          </Col>
-          <Col>
-            <h5 className='text-center'>Salse</h5>
-            <ToggleButtonGroup type='checkbox' className='my-2 gap-1 d-flex flex-column'>
-              {allIngredientList &&
-                btnSpawner(allIngredientList, "ingredientCategory", "SAUCES", addIngredient, ingredientList)}
-            </ToggleButtonGroup>
-          </Col>
-          <Col>
-            {ingredientList && (
-              <ListGroup>
-                {ingredientList.map((element, index) => (
-                  <ListGroup.Item key={index} className='m-1 rounded-4 shadow-sm'>
-                    {element.name}
-                  </ListGroup.Item>
-                ))}
-              </ListGroup>
-            )}
-          </Col>
+        <Row className='pt-5 justify-content-center'>
+          <IngredientList
+            allIngredientList={allIngredientList}
+            addIngredient={addIngredient}
+            ingredientList={ingredientList}
+          />
         </Row>
 
-        <Button className='submit-btn' onClick={handleSubmit}>
-          Salva
-          <FaRegArrowAltCircleRight className='ms-auto' />
-        </Button>
+        <Row className='justify-content-center'>
+          <Col sm={2}>
+            <Button className='submit-btn w-100' onClick={handleSubmit}>
+              Salva
+              <FaRegArrowAltCircleRight className='ms-auto' />
+            </Button>
+          </Col>
+        </Row>
       </Form>
-      {allProducts && (
-        <Row className='pt-5'>
-          <Col sm={12} className='py-5'>
-            <ButtonGroup>
-              {radios.map((radio, idx) => (
-                <ToggleButton
-                  key={idx}
-                  id={`radio-${idx}`}
-                  type='radio'
-                  variant={idx % 2 ? "outline-success" : "outline-danger"}
-                  name='radio'
-                  value={radio.value}
-                  checked={radioValue === radio.value}
-                  onChange={(e) => setRadioValue(e.currentTarget.value)}
-                >
-                  {radio.name}
-                </ToggleButton>
-              ))}
-            </ButtonGroup>
-          </Col>
-
-          {radioValue == 1 && <HotdishesList productList={allProducts} />}
-          {radioValue == 2 && <DrinkList productList={allProducts} />}
-        </Row>
-      )}
-    </div>
+    </>
   );
-}
-
+};
 export default ProductForm;

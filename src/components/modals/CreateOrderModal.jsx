@@ -292,6 +292,7 @@ const CreateOrderModal = (props) => {
                 handleCloseBill={handleCloseBill}
                 handleAddToOrder={handleAddToOrder}
                 handleRemoveFromOrder={handleRemoveFromOrder}
+                editable={true}
               />
             )}
           </Row>

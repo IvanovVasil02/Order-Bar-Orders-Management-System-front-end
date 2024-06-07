@@ -1,6 +1,13 @@
 import { Button, Col, Nav } from "react-bootstrap";
+import { useDispatch } from "react-redux";
+import { logout } from "./components/redux/actions/authenticationActions";
 
 const Sidebar = (props) => {
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    dispatch(logout());
+  };
   return (
     <>
       <Col sm={2} className='p-0 bg-success d-none d-lg-block'>
@@ -20,8 +27,13 @@ const Sidebar = (props) => {
               <Button className='pointer' onClick={() => props.handleSelectForm("orderForm")}>
                 Ordini
               </Button>
+              <Button className='pointer' onClick={() => props.handleSelectForm("orderHistory")}>
+                Storico
+              </Button>
             </div>
-            <Button className='pointer mt-auto'>Lougout</Button>
+            <Button className='pointer mt-auto' onClick={handleLogout}>
+              Lougout
+            </Button>
           </div>
         </Nav>
       </Col>

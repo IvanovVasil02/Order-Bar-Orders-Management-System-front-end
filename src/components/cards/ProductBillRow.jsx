@@ -10,12 +10,16 @@ const ProductBillRow = (props) => {
         </td>
         <td>{props.product.name}</td>
         <td>{props.product.price}€</td>
-        <td>
-          <LuPlus className='fs-1 modal-btn shadow-sm' onClick={props.addFunction} />
-        </td>
-        <td>
-          <LuMinus className='fs-1  modal-btn shadow-sm' onClick={props.removeFunction} />
-        </td>
+        {props.editable && (
+          <>
+            <td>
+              <LuPlus className='fs-1 modal-btn shadow-sm' onClick={props.addFunction} />
+            </td>
+            <td>
+              <LuMinus className='fs-1  modal-btn shadow-sm' onClick={props.removeFunction} />
+            </td>
+          </>
+        )}
       </tr>
     </>
   );

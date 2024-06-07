@@ -2,7 +2,6 @@ import { Col, Table } from "react-bootstrap";
 import ProductBillRow from "../cards/ProductBillRow";
 
 const DinnerBill = (props) => {
-  console.log(props.data.productList);
   return (
     <>
       {props.data && props.data.productList && props.data.productList && (
@@ -24,14 +23,17 @@ const DinnerBill = (props) => {
                   product={product}
                   removeFunction={() => props.handleRemoveFromOrder(product.id)}
                   addFunction={() => props.handleAddToOrder(product)}
+                  editable={props.editable}
                 />
               ))}
             </tbody>
           </Table>
 
           <div className='px-2'>
-            <h5>Totale da pagare: {props.data.totalPrice}€</h5>
-            <h5>Restante da pagare: {props.data.remainingToPay}€</h5>
+            <h5>
+              {props.editable ? "Totale da pagare" : "Conto"}: {props.data.totalPrice}€
+            </h5>
+            {props.editable && <h5>Restante da pagare: {props.data.remainingToPay}€</h5>}
           </div>
         </Col>
       )}
