@@ -6,19 +6,16 @@ export const LOGOUT = "LOGOUT";
 export const fetchLogin = (email, password) => {
   return async (dispatch) => {
     try {
-      const response = await fetch(
-        "https://bar-order-management-system-production.up.railway.app/authentication/login",
-        {
-          method: "POST",
-          body: JSON.stringify({
-            email,
-            password,
-          }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch("bar-order-management-system-production.up.railway.app/authentication/login", {
+        method: "POST",
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       if (response.ok) {
         const resp = await response.json();
