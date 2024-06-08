@@ -39,7 +39,7 @@ const Table = (props) => {
           data-value={props.table.tableNumber}
           onClick={() => (props.editable ? handleShowCreateOrderModal() : handleShowEditModal())}
         >
-          Tavolo {props.table.tableNumber}
+          {props.table.tableNumber}
         </Button>
       </Col>
       {props.editable && (

@@ -160,6 +160,7 @@ body {
   border: none !important;
   border-radius: 20px !important;
   width: 100%;
+  height: 60px !important;
   box-shadow: 2px 4px 12px #00000014;
   margin-block: 5px;
   font-size: 1.1rem !important;
@@ -170,6 +171,7 @@ body {
   color: #fff !important;
   border-radius: 20px !important;
   width: 100%;
+  height: 60px !important;
 }
 
 
