@@ -4,10 +4,16 @@ export const ActiveFormContext = createContext();
 
 export const ActiveFormProvider = ({ children }) => {
   const [activeForm, setActiveForm] = useState("orderForm");
-
+  const [show, setShow] = useState(false);
   const handleSelectForm = (form) => {
     setActiveForm(form);
+    setShow(false);
   };
 
-  return <ActiveFormContext.Provider value={{ activeForm, handleSelectForm }}>{children}</ActiveFormContext.Provider>;
+  const handleShow = () => setShow(true);
+  return (
+    <ActiveFormContext.Provider value={{ activeForm, handleSelectForm, show, handleShow }}>
+      {children}
+    </ActiveFormContext.Provider>
+  );
 };

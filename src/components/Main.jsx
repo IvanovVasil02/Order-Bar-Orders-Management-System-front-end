@@ -2,7 +2,7 @@ import { Button, CloseButton, Col, Container, Offcanvas, Row } from "react-boots
 import { HiOutlineBars3 } from "react-icons/hi2";
 import Sidebar from "../Sidebar";
 import OrderForm from "./forms/OrderForm";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import ProductForm from "./mainPages/ProductsPage";
 import OrderHistoryPage from "./mainPages/OrderHistoryPage";
 import { ActiveFormContext } from "../contexts/ActiveFormContext";
@@ -14,12 +14,8 @@ import { logout } from "./redux/actions/authenticationActions";
 
 const Main = () => {
   const dispatch = useDispatch();
-  const [show, setShow] = useState(false);
-  const { activeForm, handleSelectForm } = useContext(ActiveFormContext);
+  const { activeForm, handleSelectForm, show, handleShow, handleClose } = useContext(ActiveFormContext);
   const token = useSelector((state) => state.main.savedToken);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
 
   const handleLogout = () => {
     localStorage.removeItem("main");
@@ -65,9 +61,6 @@ const Main = () => {
                       <Button className='pointer' onClick={() => handleLogout()}>
                         Lougout
                       </Button>
-                    </div>
-                    <div className='d-flex align-items-center '>
-                      <CloseButton onClick={handleClose} />
                     </div>
                   </div>
                 </Offcanvas.Body>
