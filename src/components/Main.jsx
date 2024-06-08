@@ -66,7 +66,7 @@ const Main = () => {
                         Lougout
                       </Button>
                     </div>
-                    <div className='d-flex align-items-center position-absolute bottom-0'>
+                    <div className='d-flex align-items-center '>
                       <CloseButton onClick={handleClose} />
                     </div>
                   </div>
