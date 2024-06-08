@@ -1,3 +1,5 @@
+import { APIBASE } from "./apiConfig";
+
 export const GET_TABLE_LIST = "GET_TABLE_LIST";
 
 // ---------------------------------GET ALL TABLES----------------------------------
@@ -5,7 +7,7 @@ export const GET_TABLE_LIST = "GET_TABLE_LIST";
 export const fetchAllTables = (token) => {
   return async (dispatch) => {
     try {
-      const resp = await fetch("http://localhost:3001/tables", {
+      const resp = await fetch(APIBASE + "tables", {
         method: "GET",
         headers: {
           Authorization: "Bearer " + token,
@@ -27,7 +29,7 @@ export const fetchAllTables = (token) => {
 export const createTables = (num, token) => {
   return async (dispatch) => {
     try {
-      const resp = await fetch("http://localhost:3001/tables/addTables/" + num, {
+      const resp = await fetch(APIBASE + "tables/addTables/" + num, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -51,7 +53,7 @@ export const createTables = (num, token) => {
 export const deleteTable = (num, token) => {
   return async (dispatch) => {
     try {
-      const resp = await fetch("http://localhost:3001/tables/" + num, {
+      const resp = await fetch(APIBASE + "tables/" + num, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

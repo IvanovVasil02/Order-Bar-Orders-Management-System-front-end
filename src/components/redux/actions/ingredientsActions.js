@@ -1,3 +1,5 @@
+import { APIBASE } from "./apiConfig";
+
 export const GET_INGREDIENT_LIST = "GET_INGREDIENTS_LIST";
 
 // ---------------------------------GET ALL INGREDIENTS----------------------------------
@@ -5,7 +7,7 @@ export const GET_INGREDIENT_LIST = "GET_INGREDIENTS_LIST";
 export const fetchAllIngredients = (token) => {
   return async (dispatch) => {
     try {
-      const resp = await fetch("http://localhost:3001/ingredients", {
+      const resp = await fetch(APIBASE + "ingredients", {
         method: "GET",
         headers: {
           Authorization: "Bearer " + token,
@@ -27,7 +29,7 @@ export const fetchAllIngredients = (token) => {
 export const saveIngredient = (ingredientName, ingredientCategory, token) => {
   return async (dispatch) => {
     try {
-      const resp = await fetch("http://localhost:3001/ingredients", {
+      const resp = await fetch(APIBASE + "ingredients", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -51,7 +53,7 @@ export const saveIngredient = (ingredientName, ingredientCategory, token) => {
 export const editIngredient = (ingredientId, ingredientName, ingredientCategory, token) => {
   return async (dispatch) => {
     try {
-      const resp = await fetch("http://localhost:3001/ingredients?ingredientId=" + ingredientId, {
+      const resp = await fetch(APIBASE + "ingredients?ingredientId=" + ingredientId, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -75,7 +77,7 @@ export const editIngredient = (ingredientId, ingredientName, ingredientCategory,
 export const deleteIngredient = (ingredientId, token) => {
   return async (dispatch) => {
     try {
-      const resp = await fetch("http://localhost:3001/ingredients?ingredientId=" + ingredientId, {
+      const resp = await fetch(APIBASE + "ingredients?ingredientId=" + ingredientId, {
         method: "DELETE",
         headers: {
           Authorization: "Bearer " + token,
