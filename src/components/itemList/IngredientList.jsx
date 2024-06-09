@@ -1,5 +1,5 @@
 import { Col, ListGroup } from "react-bootstrap";
-import CategoryList from "./ProductList";
+import CategoryList from "./CategoryList";
 import { useContext } from "react";
 import { CategoriesContext } from "../../contexts/CategoriesContext";
 

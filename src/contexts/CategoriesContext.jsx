@@ -3,7 +3,7 @@ import { createContext } from "react";
 export const CategoriesContext = createContext();
 
 const hotDishesCategories = [
-  { title: "Panini", categoryKey: "subCategory", categoryValue: "BEER" },
+  { title: "Panini", categoryKey: "subCategory", categoryValue: "SANDWICH" },
   { title: "Hamburger", categoryKey: "subCategory", categoryValue: "HAMBURGER" },
   { title: "Piadine", categoryKey: "subCategory", categoryValue: "DONER" },
   { title: "Fritti", categoryKey: "subCategory", categoryValue: "FRIED" },
