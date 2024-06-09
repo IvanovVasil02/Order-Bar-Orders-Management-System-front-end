@@ -1,23 +1,15 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { ButtonGroup, Row, ToggleButton } from "react-bootstrap";
 import Col from "react-bootstrap/Col";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import CategoryList from "../itemList/CategoryList";
 
 import ProductForm from "../forms/ProductForm";
-import { fetchAllProducts } from "../redux/actions/productActions";
 import { CategoriesContext } from "../../contexts/CategoriesContext";
 
 const ProductsPage = (props) => {
-  const dispatch = useDispatch();
   const token = useSelector((state) => state.main.savedToken);
   const allProducts = useSelector((state) => state.products.productList);
-  const [thereIsUpdate, setThereIsUpdate] = useState(false);
-
-  useEffect(() => {
-    !thereIsUpdate && dispatch(fetchAllProducts(token));
-    setThereIsUpdate(false);
-  }, [token, thereIsUpdate, dispatch]);
 
   const [radioValue, setRadioValue] = useState("1");
 
@@ -35,7 +27,7 @@ const ProductsPage = (props) => {
       <h2 className='pt-5'>Creia un nuovo Prodotto</h2>
 
       <div className='d-flex align-items-center'>
-        <ProductForm token={token} setThereIsUpdate={setThereIsUpdate} />
+        <ProductForm token={token} />
       </div>
 
       <h2 className='pt-5'>Prodotti</h2>

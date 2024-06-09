@@ -55,7 +55,6 @@ const ProductForm = (props) => {
     dispatch(
       saveProduct(productCategory, productSubCategory, productName, price, quantity, ingredientList, props.token)
     );
-    props.setThereIsUpdate(true);
     setValidated(true);
   };
 
