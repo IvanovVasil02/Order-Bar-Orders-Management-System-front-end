@@ -1,4 +1,4 @@
-import { GET_PRODUCT_LIST, UPDATE_PRODUCT_LIST } from "../actions/productActions";
+import { ADD_TO_PRODUCT_LIST, GET_PRODUCT_LIST, UPDATE_PRODUCT_LIST } from "../actions/productActions";
 
 const productsState = {
   productList: [],
@@ -21,6 +21,11 @@ const productsReducer = (state = productsState, action) => {
             product.id != action.payload.id;
           }),
         ],
+      };
+    case ADD_TO_PRODUCT_LIST:
+      return {
+        ...state,
+        productList: [...state.productList, action.payload],
       };
 
     default:

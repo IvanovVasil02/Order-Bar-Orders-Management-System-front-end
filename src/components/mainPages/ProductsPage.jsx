@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { ButtonGroup, Row, ToggleButton } from "react-bootstrap";
 import Col from "react-bootstrap/Col";
 import { useDispatch, useSelector } from "react-redux";
-import CategoryList from "../itemList/ProductList";
+import CategoryList from "../itemList/CategoryList";
 
 import ProductForm from "../forms/ProductForm";
 import { fetchAllProducts } from "../redux/actions/productActions";

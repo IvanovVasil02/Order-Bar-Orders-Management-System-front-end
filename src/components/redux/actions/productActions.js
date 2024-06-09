@@ -2,6 +2,7 @@ import { APIBASE } from "./apiConfig";
 
 export const GET_PRODUCT_LIST = "GET_PRODUCT_LIST";
 export const UPDATE_PRODUCT_LIST = "UPDATE_PRODUCT_LIST";
+export const ADD_TO_PRODUCT_LIST = "ADD_TO_PRODUCT_LIST";
 // ---------------------------------GET ALL PRODUCTS----------------------------------
 
 export const fetchAllProducts = (token) => {
@@ -55,7 +56,7 @@ export const saveProduct = (
 
       if (resp.ok) {
         const data = await resp.json();
-        dispatch({ type: GET_PRODUCT_LIST, payload: data });
+        dispatch({ type: ADD_TO_PRODUCT_LIST, payload: data });
       }
     } catch (error) {
       console.log(error);

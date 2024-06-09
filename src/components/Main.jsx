@@ -1,4 +1,4 @@
-import { Button, CloseButton, Col, Container, Offcanvas, Row } from "react-bootstrap";
+import { Button, Col, Container, Offcanvas, Row } from "react-bootstrap";
 import { HiOutlineBars3 } from "react-icons/hi2";
 import Sidebar from "../Sidebar";
 import OrderForm from "./forms/OrderForm";
