@@ -1,4 +1,4 @@
-import { APIBASE } from "./apiConfig";
+import { APIBASE } from "./config/apiConfig";
 
 export const GET_PRODUCT_LIST = "GET_PRODUCT_LIST";
 export const UPDATE_PRODUCT_LIST = "UPDATE_PRODUCT_LIST";
@@ -8,7 +8,7 @@ export const ADD_TO_PRODUCT_LIST = "ADD_TO_PRODUCT_LIST";
 export const fetchAllProducts = (token) => {
   return async (dispatch) => {
     try {
-      const resp = await fetch(APIBASE + "products", {
+      const resp = await fetch(APIBASE + "/products", {
         method: "GET",
         headers: {
           Authorization: "Bearer " + token,
@@ -38,7 +38,7 @@ export const saveProduct = (
 ) => {
   return async (dispatch) => {
     try {
-      const resp = await fetch(APIBASE + "products", {
+      const resp = await fetch(APIBASE + "/products", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -78,7 +78,7 @@ export const editProduct = (
 ) => {
   return async (dispatch) => {
     try {
-      const resp = await fetch(APIBASE + "products?productId=" + productId, {
+      const resp = await fetch(APIBASE + "/products?productId=" + productId, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

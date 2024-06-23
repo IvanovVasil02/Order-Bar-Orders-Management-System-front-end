@@ -1,13 +1,14 @@
-import { APIBASE } from "./apiConfig";
+import { APIBASE } from "./config/apiConfig";
 import { fetchAllTables } from "./tablesActions";
 
 export const GET_ORDER_LIST = "GET_ORDER_LIST";
+export const UPDATE_ORDER_LIST = "UPDATE_ORDER_LIST";
 // ---------------------------------GET ALL ORDERS BY DATE ----------------------------------
 
 export const fetchAllOrders = (token, date) => {
   return async (dispatch) => {
     try {
-      const resp = await fetch(APIBASE + "orders?date=" + date, {
+      const resp = await fetch(APIBASE + "/orders?date=" + date, {
         method: "GET",
         headers: {
           Authorization: "Bearer " + token,
@@ -35,7 +36,7 @@ export const saveOrder = (tableId, note, productList1, token) => {
         note: "nope",
       }));
 
-      const resp = await fetch(APIBASE + "orders", {
+      const resp = await fetch(APIBASE + "/orders", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -46,7 +47,7 @@ export const saveOrder = (tableId, note, productList1, token) => {
 
       if (resp.ok) {
         const data = await resp.json();
-        dispatch({ type: GET_ORDER_LIST, payload: data });
+        dispatch({ type: UPDATE_ORDER_LIST, payload: data });
       }
     } catch (error) {
       console.log(error);
@@ -59,7 +60,7 @@ export const saveOrder = (tableId, note, productList1, token) => {
 export const addToOrder = (orderId, product, token) => {
   return async (dispatch) => {
     try {
-      const resp = await fetch(APIBASE + "orders/addToOrder/" + orderId, {
+      const resp = await fetch(APIBASE + "/orders/addToOrder/" + orderId, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -82,7 +83,7 @@ export const addToOrder = (orderId, product, token) => {
 export const payPartialOrder = (orderId, product, token) => {
   return async (dispatch) => {
     try {
-      const resp = await fetch(APIBASE + "orders/payPartialOrder/" + orderId, {
+      const resp = await fetch(APIBASE + "/orders/payPartialOrder/" + orderId, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -105,7 +106,7 @@ export const payPartialOrder = (orderId, product, token) => {
 export const closeOrder = (orderId, token) => {
   return async (dispatch) => {
     try {
-      const resp = await fetch(APIBASE + "orders/payOrder/" + orderId, {
+      const resp = await fetch(APIBASE + "/orders/payOrder/" + orderId, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

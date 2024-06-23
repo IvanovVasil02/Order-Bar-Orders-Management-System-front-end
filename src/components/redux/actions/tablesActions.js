@@ -1,13 +1,15 @@
-import { APIBASE } from "./apiConfig";
+import { APIBASE } from "./config/apiConfig";
 
 export const GET_TABLE_LIST = "GET_TABLE_LIST";
+export const ADD_TO_TABLE_LIST = "ADD_TO_TABLE_LIST";
+export const DELETE_TABLE = "DELETE_TABLE";
 
 // ---------------------------------GET ALL TABLES----------------------------------
 
 export const fetchAllTables = (token) => {
   return async (dispatch) => {
     try {
-      const resp = await fetch(APIBASE + "tables", {
+      const resp = await fetch(APIBASE + "/tables", {
         method: "GET",
         headers: {
           Authorization: "Bearer " + token,
@@ -29,7 +31,7 @@ export const fetchAllTables = (token) => {
 export const createTables = (num, token) => {
   return async (dispatch) => {
     try {
-      const resp = await fetch(APIBASE + "tables/addTables/" + num, {
+      const resp = await fetch(APIBASE + "/tables/addTables/" + num, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -40,7 +42,7 @@ export const createTables = (num, token) => {
 
       if (resp.ok) {
         const data = await resp.json();
-        dispatch({ type: GET_TABLE_LIST, payload: data });
+        dispatch({ type: ADD_TO_TABLE_LIST, payload: data });
       }
     } catch (error) {
       console.log(error);
@@ -53,7 +55,7 @@ export const createTables = (num, token) => {
 export const deleteTable = (num, token) => {
   return async (dispatch) => {
     try {
-      const resp = await fetch(APIBASE + "tables/" + num, {
+      const resp = await fetch(APIBASE + "/tables/" + num, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -62,7 +64,7 @@ export const deleteTable = (num, token) => {
       });
 
       if (resp.ok) {
-        dispatch(fetchAllTables(token));
+        dispatch({ type: DELETE_TABLE, payload: num });
       }
     } catch (error) {
       console.log(error);

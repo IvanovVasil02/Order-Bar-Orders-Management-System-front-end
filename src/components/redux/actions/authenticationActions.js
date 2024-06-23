@@ -1,5 +1,5 @@
 import { jwtDecode } from "jwt-decode";
-import { APIBASE } from "./apiConfig";
+import { APIBASE } from "./config/apiConfig";
 
 export const SAVED_TOKEN = "SAVED_TOKEN";
 export const LOGOUT = "LOGOUT";
@@ -7,7 +7,7 @@ export const LOGOUT = "LOGOUT";
 export const fetchLogin = (email, password) => {
   return async (dispatch) => {
     try {
-      const response = await fetch(APIBASE + "authentication/login", {
+      const response = await fetch(APIBASE + "/authentication/login", {
         method: "POST",
         body: JSON.stringify({
           email,
