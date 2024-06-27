@@ -1,5 +1,5 @@
 import { Button, Col, Form, Row } from "react-bootstrap";
-import { handleBlur, handleInputFocus } from "../utilities";
+import { clearFields, handleBlur, handleInputFocus } from "../utilities";
 import IngredientList from "../itemList/IngredientList";
 import { FaRegArrowAltCircleRight } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,6 +16,7 @@ const ProductForm = (props) => {
   const [quantity, setQuantity] = useState("");
   const [price, setPrice] = useState("");
   const [ingredientList, setIngredientList] = useState([]);
+  const [errors, setErrors] = useState(null);
 
   const foodSubCategory = [
     { name: "Panini", value: "SANDWICH" },
@@ -46,15 +47,33 @@ const ProductForm = (props) => {
 
   const [validated, setValidated] = useState(false);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
       event.stopPropagation();
     }
-    dispatch(
-      saveProduct(productCategory, productSubCategory, productName, price, quantity, ingredientList, props.token)
-    );
+    try {
+      await dispatch(
+        saveProduct(productCategory, productSubCategory, productName, price, quantity, ingredientList, props.token)
+      );
+      setTimeout(() => {
+        clearFields(
+          [
+            setProductName,
+            setProductCategory,
+            setProductSubCategory,
+            setQuantity,
+            setPrice,
+            setIngredientList,
+            setErrors,
+          ],
+          setValidated
+        );
+      }, 3000);
+    } catch (errorData) {
+      setErrors(errorData);
+    }
     setValidated(true);
   };
 
@@ -71,7 +90,6 @@ const ProductForm = (props) => {
           <Col>
             <div className='input-container'>
               {(isTextVisible.product.value || productName) && <p>Nome prodotto</p>}
-
               <Form.Group controlId='validationCustom023'>
                 <Form.Control
                   required
@@ -82,7 +100,16 @@ const ProductForm = (props) => {
                   onBlur={(e) => handleBlur("product", e, isTextVisible, setIsTextVisible)}
                   onChange={(e) => setProductName(e.target.value)}
                 />
-              </Form.Group>
+              </Form.Group>{" "}
+              {errors && (
+                <Form.Text id='passwordHelpBlock'>
+                  {errors.errorsList
+                    .filter((error) => error.field === "productName")
+                    .map((error, index) => (
+                      <p key={index}>{error.message}</p>
+                    ))}
+                </Form.Text>
+              )}
             </div>
           </Col>
 
@@ -99,6 +126,15 @@ const ProductForm = (props) => {
                 <option value='DRINK'>Bevanda</option>
                 <option value='HOT_DISHES'>Cibo Caldo</option>
               </Form.Select>
+              {errors && (
+                <Form.Text id='passwordHelpBlock'>
+                  {errors.errorsList
+                    .filter((error) => error.field === "productCategory")
+                    .map((error, index) => (
+                      <p key={index}>{error.message}</p>
+                    ))}
+                </Form.Text>
+              )}
             </div>
           </Col>
 
@@ -127,6 +163,15 @@ const ProductForm = (props) => {
                     </option>
                   ))}
               </Form.Select>
+              {errors && (
+                <Form.Text id='passwordHelpBlock'>
+                  {errors.errorsList
+                    .filter((error) => error.field === "subCategory")
+                    .map((error, index) => (
+                      <p key={index}>{error.message}</p>
+                    ))}
+                </Form.Text>
+              )}
             </div>
           </Col>
 
@@ -160,6 +205,15 @@ const ProductForm = (props) => {
                   onChange={(e) => setPrice(e.target.value)}
                 />
               </Form.Group>
+              {errors && (
+                <Form.Text id='passwordHelpBlock'>
+                  {errors.errorsList
+                    .filter((error) => error.field === "price")
+                    .map((error, index) => (
+                      <p key={index}>{error.message}</p>
+                    ))}
+                </Form.Text>
+              )}
             </div>
           </Col>
         </Row>

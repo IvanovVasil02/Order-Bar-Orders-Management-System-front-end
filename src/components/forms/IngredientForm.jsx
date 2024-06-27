@@ -16,19 +16,24 @@ function IngredientForm() {
   const [ingredientCategory, setIngredientCategory] = useState("");
 
   const [isTextVisible, setIsTextVisible] = useState({ ingredient: { value: false, name: "Nome ingrediente" } });
+  const [errors, setErrors] = useState(null);
 
-  const handleSubmitIngredient = (event) => {
+  const handleSubmitIngredient = async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
       event.stopPropagation();
     }
 
-    dispatch(saveIngredient(capitalizeFirstLetter(ingredientName), ingredientCategory, token));
-    setValidated(true);
-    setTimeout(() => {
-      clearFields([setIngredientName, setIngredientCategory], setValidated);
-    }, 3000);
+    try {
+      await dispatch(saveIngredient(capitalizeFirstLetter(ingredientName), ingredientCategory, token));
+      setValidated(true);
+      setTimeout(() => {
+        clearFields([setIngredientName, setIngredientCategory, setErrors], setValidated);
+      }, 3000);
+    } catch (errorData) {
+      setErrors(errorData);
+    }
   };
 
   return (
@@ -47,6 +52,15 @@ function IngredientForm() {
             onChange={(e) => setIngredientName(e.target.value)}
           />
         </Form.Group>
+        {errors && (
+          <Form.Text>
+            {errors.errorsList
+              .filter((error) => error.field === "ingredientName")
+              .map((error, index) => (
+                <p key={index}>{error.message}</p>
+              ))}
+          </Form.Text>
+        )}
       </div>
 
       <div className='input-container'>
@@ -64,6 +78,15 @@ function IngredientForm() {
           <option value='CHEESES'>Formaggi</option>
           <option value='SAUCES'>Salse</option>
         </Form.Select>
+        {errors && (
+          <Form.Text>
+            {errors.errorsList
+              .filter((error) => error.field === "ingredientCategory")
+              .map((error, index) => (
+                <p key={index}>{error.message}</p>
+              ))}
+          </Form.Text>
+        )}
       </div>
 
       <Button onClick={handleSubmitIngredient} className='submit-btn '>

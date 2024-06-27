@@ -32,22 +32,21 @@ export const fetchAllIngredients = (token) => {
 
 export const saveIngredient = (ingredientName, ingredientCategory, token) => {
   return async (dispatch) => {
-    try {
-      const resp = await fetch(APIBASE + "/ingredients", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-        body: JSON.stringify({ ingredientName, ingredientCategory }),
-      });
+    const resp = await fetch(APIBASE + "/ingredients", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify({ ingredientName, ingredientCategory }),
+    });
 
-      if (resp.ok) {
-        const data = await resp.json();
-        dispatch({ type: ADD_TO_INGREDIENT_LIST, payload: data });
-      }
-    } catch (error) {
-      console.log(error);
+    if (!resp.ok) {
+      const errorData = await resp.json();
+      throw errorData;
+    } else {
+      const data = await resp.json();
+      dispatch({ type: ADD_TO_INGREDIENT_LIST, payload: data });
     }
   };
 };

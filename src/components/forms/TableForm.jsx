@@ -13,19 +13,25 @@ function TableForm() {
   const [validated, setValidated] = useState(false);
   const [num, setNum] = useState("");
   const [isTextVisible, setIsTextVisible] = useState({ table: { value: false, name: "Numero tavoli" } });
+  const [errors, setErrors] = useState(null);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
       event.stopPropagation();
     }
 
-    dispatch(createTables(num, token));
+    try {
+      await dispatch(createTables(num, token));
+
+      // setTimeout(() => {
+      //   clearFields([setNum, setErrors]);
+      // }, 3000);
+    } catch (errorData) {
+      setErrors(errorData);
+    }
     setValidated(true);
-    setTimeout(() => {
-      clearFields([setNum]);
-    }, 3000);
   };
 
   return (
@@ -45,6 +51,7 @@ function TableForm() {
               onChange={(e) => setNum(e.target.value)}
             />
           </Form.Group>
+          {errors && <Form.Text>{errors.message && <p>{errors.message}</p>}</Form.Text>}
         </div>
 
         <Button onClick={handleSubmit} className='submit-btn'>

@@ -30,22 +30,21 @@ export const fetchAllTables = (token) => {
 
 export const createTables = (num, token) => {
   return async (dispatch) => {
-    try {
-      const resp = await fetch(APIBASE + "/tables/addTables/" + num, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-        body: JSON.stringify(num),
-      });
+    const resp = await fetch(APIBASE + "/tables/addTables/" + num, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify(num),
+    });
 
-      if (resp.ok) {
-        const data = await resp.json();
-        dispatch({ type: ADD_TO_TABLE_LIST, payload: data });
-      }
-    } catch (error) {
-      console.log(error);
+    if (!resp.ok) {
+      const errorData = await resp.json();
+      throw errorData;
+    } else {
+      const data = await resp.json();
+      dispatch({ type: ADD_TO_TABLE_LIST, payload: data });
     }
   };
 };
