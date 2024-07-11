@@ -1,5 +1,5 @@
 import { APIBASE } from "./config/apiConfig";
-import { fetchAllTables, ADD_ORDER_TO_TABLE } from "./tablesActions";
+import { ADD_ORDER_TO_TABLE } from "./tablesActions";
 
 export const GET_ORDER_LIST = "GET_ORDER_LIST";
 export const UPDATE_ORDER_LIST = "UPDATE_ORDER_LIST";
@@ -95,7 +95,8 @@ export const payPartialOrder = (orderId, product, token) => {
       });
 
       if (resp.ok) {
-        dispatch(fetchAllTables(token));
+        const data = await resp.json();
+        dispatch({ type: ADD_ORDER_TO_TABLE, payload: data });
       }
     } catch (error) {
       console.log(error);
@@ -117,7 +118,8 @@ export const closeOrder = (orderId, token) => {
       });
 
       if (resp.ok) {
-        dispatch(fetchAllTables(token));
+        const data = await resp.json();
+        dispatch({ type: ADD_ORDER_TO_TABLE, payload: data });
       }
     } catch (error) {
       console.log(error);

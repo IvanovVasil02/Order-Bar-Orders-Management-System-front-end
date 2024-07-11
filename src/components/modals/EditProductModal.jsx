@@ -1,50 +1,93 @@
 import { useEffect, useState } from "react";
 import { Button, Col, Form, Modal, Row } from "react-bootstrap";
-import { capitalizeFirstLetter, clearFields, handleBlur, handleInputFocus } from "../utilities";
-import { useDispatch } from "react-redux";
-import { deleteIngredient, editIngredient, fetchAllIngredients } from "../redux/actions/ingredientsActions";
+import { handleBlur, handleInputFocus } from "../utilities";
+import { useDispatch, useSelector } from "react-redux";
 import { FaRegArrowAltCircleRight } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
+import { fetchAllIngredients } from "../redux/actions/ingredientsActions";
 import { editProduct } from "../redux/actions/productActions";
+import IngredientList from "../itemList/IngredientList";
 
-const EditIngredientModal = (props) => {
+const EditProductModal = (props) => {
   const dispatch = useDispatch();
+  const allIngredientList = useSelector((state) => state.ingredients.ingredientList);
   const [validated, setValidated] = useState(false);
+  // eslint-disable-next-line no-unused-vars
   const [productId, setProductId] = useState(props.data?.id || "");
-  const [productName, setProductName] = useState("");
-  const [productCategory, setProductCategory] = useState("");
-  const [productSubCategory, setProductSubCategory] = useState("");
-  const [quantity, setQuantity] = useState("");
-  const [price, setPrice] = useState("");
-  const [ingredientList, setIngredientList] = useState([]);
+  const [productName, setProductName] = useState(props.data?.name || "");
+  const [productCategory, setProductCategory] = useState(props.data?.productCategory || "");
+  const [productSubCategory, setProductSubCategory] = useState(props.data?.subCategory || "");
+  const [quantity, setQuantity] = useState(props.data?.quantity || "");
+  const [price, setPrice] = useState(props.data?.price || "");
+  const [ingredientList, setIngredientList] = useState(props.data?.ingredients || []);
+
+  const foodSubCategory = [
+    { name: "Panini", value: "SANDWICH" },
+    { name: "Hamburger", value: "HAMBURGER" },
+    { name: "Piadine", value: "DONER" },
+    { name: "Fritti", value: "FRIED" },
+  ];
+
+  const drinkSubCategory = [
+    { name: "Succhi di frutta", value: "JUICES" },
+    { name: "Bevande gassate", value: "SODAS" },
+    { name: "TE", value: "TEA" },
+    { name: "Birra", value: "BEER" },
+    { name: "Coctails", value: "COCKTAILS" },
+    { name: "Mocktails", value: "MOCKTAILS" },
+    { name: "Acqua", value: "WATER" },
+    { name: "Cofee", value: "COFEE" },
+  ];
+
+  const [isTextVisible, setIsTextVisible] = useState({
+    product: { value: false, name: "Nome Prodotto" },
+    price: { value: false, name: "Prezzo" },
+  });
 
   useEffect(() => {
     dispatch(fetchAllIngredients(props.token));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (props.data) {
+      setProductId(props.data.id || "");
+      setProductName(props.data.name || "");
+      setProductCategory(props.data.productCategory || "");
+      setProductSubCategory(props.data.subCategory || "");
+      setQuantity(props.data.quantity || "");
+      setPrice(props.data.price || "");
+      setIngredientList(props.data.ingredients || []);
+    }
+  }, [props.data]);
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
       event.stopPropagation();
+    } else {
+      dispatch(
+        editProduct(
+          productId,
+          productCategory,
+          productSubCategory,
+          productName,
+          price,
+          quantity,
+          ingredientList,
+          props.token
+        )
+      );
+      setValidated(true);
+      props.handleClose();
     }
-    dispatch(
-      editProduct(
-        productId,
-        productCategory,
-        productSubCategory,
-        productName,
-        price,
-        quantity,
-        ingredientList,
-        props.token
-      )
-    );
-    setValidated(true);
   };
 
-  const handleDelete = () => {
-    dispatch(deleteIngredient(productId, props.token));
+  const addIngredient = (value) => {
+    ingredientList.includes(value)
+      ? setIngredientList(ingredientList.filter((ingredient) => ingredient !== value))
+      : setIngredientList([...ingredientList, value]);
   };
 
   return (
@@ -57,17 +100,22 @@ const EditIngredientModal = (props) => {
     >
       <Modal.Header>
         <Modal.Title id='contained-modal-title-vcenter' className='align-self-center'>
-          Modifica ingrediente
+          Modifica prodotto
         </Modal.Title>
         <IoMdClose className='fs-3 ms-auto' onClick={props.handleClose} />
       </Modal.Header>
       <Modal.Body className='d-flex justify-content-center'>
-        <Form as={Col} noValidate validated={validated} className='d-flex flex-column align-items-center py-5'>
+        <Form
+          as={Col}
+          noValidate
+          validated={validated}
+          className='d-flex flex-column align-items-center py-5'
+          onSubmit={handleSubmit}
+        >
           <Row className='row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xxl-5 g-3 justify-content-center px-2 p-md-0'>
             <Col>
               <div className='input-container'>
                 {(isTextVisible.product.value || productName) && <p>Nome prodotto</p>}
-
                 <Form.Group controlId='validationCustom023'>
                   <Form.Control
                     required
@@ -144,7 +192,6 @@ const EditIngredientModal = (props) => {
             <Col>
               <div className='input-container'>
                 {(isTextVisible.price.value || price) && <p>Prezzo</p>}
-
                 <Form.Group controlId='validationCustom0243'>
                   <Form.Control
                     required
@@ -168,7 +215,7 @@ const EditIngredientModal = (props) => {
             />
           </Row>
 
-          <Button className='submit-btn' onClick={handleSubmit}>
+          <Button className='submit-btn' onClick={(e) => handleSubmit(e)}>
             Salva
             <FaRegArrowAltCircleRight className='ms-auto' />
           </Button>
@@ -177,4 +224,5 @@ const EditIngredientModal = (props) => {
     </Modal>
   );
 };
-export default EditIngredientModal;
+
+export default EditProductModal;

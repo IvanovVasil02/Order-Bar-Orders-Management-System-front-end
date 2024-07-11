@@ -10,7 +10,7 @@ const IngredientList = (props) => {
       <CategoryList
         content={props.allIngredientList}
         categoryList={ingredientCategories}
-        addIngredient={props.addIngredient}
+        btnFunction={props.addIngredient}
         ingredientList={props.ingredientList}
       />
 
