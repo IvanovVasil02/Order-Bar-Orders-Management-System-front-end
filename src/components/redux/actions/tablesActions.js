@@ -1,6 +1,7 @@
 import { APIBASE } from "./config/apiConfig";
 
 export const GET_TABLE_LIST = "GET_TABLE_LIST";
+export const ADD_ORDER_TO_TABLE = "ADD_ORDER_TO_TABLE";
 export const ADD_TO_TABLE_LIST = "ADD_TO_TABLE_LIST";
 export const DELETE_TABLE = "DELETE_TABLE";
 

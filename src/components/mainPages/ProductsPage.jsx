@@ -6,6 +6,7 @@ import CategoryList from "../itemList/CategoryList";
 
 import ProductForm from "../forms/ProductForm";
 import { CategoriesContext } from "../../contexts/CategoriesContext";
+import EditProductModal from "../modals/EditProductModal";
 
 const ProductsPage = (props) => {
   const token = useSelector((state) => state.main.savedToken);
@@ -21,6 +22,19 @@ const ProductsPage = (props) => {
   const { hotDishesCategories } = useContext(CategoriesContext);
 
   const { drinkCategories } = useContext(CategoriesContext);
+  const [showModal, setShowModal] = useState(false);
+
+  const [selectedProduct, setSelectedProduct] = useState(null);
+
+  const handleOpenModal = (product) => {
+    setSelectedProduct(product);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setSelectedProduct(null);
+  };
 
   return (
     <Row className={`text-center ${props.isVisible ? "d-block" : "d-none"}`}>
@@ -54,10 +68,16 @@ const ProductsPage = (props) => {
             </ButtonGroup>
           </Col>
 
-          {radioValue == 1 && <CategoryList content={allProducts} categoryList={hotDishesCategories} />}
-          {radioValue == 2 && <CategoryList content={allProducts} categoryList={drinkCategories} />}
+          {radioValue == 1 && (
+            <CategoryList content={allProducts} categoryList={hotDishesCategories} btnFunction={handleOpenModal} />
+          )}
+          {radioValue == 2 && (
+            <CategoryList content={allProducts} categoryList={drinkCategories} btnFunction={handleOpenModal} />
+          )}
         </Row>
       )}
+
+      <EditProductModal show={showModal} handleClose={handleCloseModal} token={props.token} data={selectedProduct} />
     </Row>
   );
 };

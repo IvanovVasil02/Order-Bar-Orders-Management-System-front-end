@@ -12,8 +12,7 @@ function OrderForm(props) {
   useEffect(() => {
     dispatch(fetchAllProducts(token));
     dispatch(fetchAllTables(token));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [token, dispatch]);
 
   const tables = useSelector((state) => state.tables.tableList);
 

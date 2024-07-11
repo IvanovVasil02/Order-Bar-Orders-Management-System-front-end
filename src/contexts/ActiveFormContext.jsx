@@ -11,8 +11,9 @@ export const ActiveFormProvider = ({ children }) => {
   };
 
   const handleShow = () => setShow(true);
+  const handleClose = () => setShow(false);
   return (
-    <ActiveFormContext.Provider value={{ activeForm, handleSelectForm, show, handleShow }}>
+    <ActiveFormContext.Provider value={{ activeForm, handleSelectForm, show, handleShow, handleClose }}>
       {children}
     </ActiveFormContext.Provider>
   );

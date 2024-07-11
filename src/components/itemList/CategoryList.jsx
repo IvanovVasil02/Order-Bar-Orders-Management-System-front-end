@@ -10,13 +10,7 @@ const CategoryList = (props) => {
 
           <ToggleButtonGroup type='checkbox' className='my-2 gap-1 d-flex flex-column'>
             {props.content &&
-              btnSpawner(
-                props.content,
-                item.categoryKey,
-                item.categoryValue,
-                props.addIngredient,
-                props.ingredientList
-              )}
+              btnSpawner(props.content, item.categoryKey, item.categoryValue, props.btnFunction, props.ingredientList)}
           </ToggleButtonGroup>
         </Col>
       ))}
