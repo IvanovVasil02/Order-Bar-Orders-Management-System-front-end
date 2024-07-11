@@ -82,11 +82,17 @@ const CreateOrderModal = (props) => {
   }, [props.table]);
 
   const handleAddToOrder = (value) => {
-    const existingProductIndex = order.productList.findIndex((item) => item.id === value.id);
     if (props.table.order) {
-      dispatch(addToOrder(props.table.order.order_id, order.productList[existingProductIndex], token));
+      const existingProductIndex = order.productList.findIndex((item) => item.id === value.id);
+      if (existingProductIndex !== -1) {
+        dispatch(addToOrder(props.table.order.order_id, order.productList[existingProductIndex], token));
+      } else {
+        dispatch(addToOrder(props.table.order.order_id, value, token));
+      }
     } else {
       const productObject = { id: value.id, quantity: 1, name: value.name, price: value.price };
+
+      const existingProductIndex = order.productList.findIndex((item) => item.id === value.id);
 
       if (existingProductIndex !== -1) {
         const updatedOrder = order.productList.map((product, index) =>
@@ -104,7 +110,7 @@ const CreateOrderModal = (props) => {
           ...order,
           productList: [...order.productList, productObject],
           totalPrice: calcAmount(value),
-          remainingToPay: calcAmount(),
+          remainingToPay: calcAmount() + value.price,
         });
       }
     }
@@ -114,7 +120,11 @@ const CreateOrderModal = (props) => {
     const existingProductIndex = order.productList.findIndex((item) => item.id === idToRemove);
     if (props.table.order) {
       dispatch(payPartialOrder(props.table.order.order_id, order.productList[existingProductIndex], token));
+      console.log("ciao12");
     } else {
+      console.log("ciao");
+      const existingProductIndex = order.productList.findIndex((item) => item.id === idToRemove);
+
       if (existingProductIndex != -1) {
         const updatedOrder = order.productList
           .map((product) => (product.id === idToRemove ? { ...product, quantity: product.quantity - 1 } : product))
@@ -123,7 +133,7 @@ const CreateOrderModal = (props) => {
         setOrder({
           ...order,
           productList: updatedOrder,
-          totalPrice: order.totalPrice,
+          totalPrice: calcAmount() - order.productList[existingProductIndex].price,
           remainingToPay: calcAmount() - order.productList[existingProductIndex].price,
         });
       }
@@ -158,6 +168,13 @@ const CreateOrderModal = (props) => {
   };
   const handleCloseOrder = () => {
     dispatch(closeOrder(props.table.order.order_id, token));
+    setOrder({
+      tableId: props.table.table_id,
+      note: "",
+      productList: [],
+      totalPrice: 0,
+      remainingToPay: 0,
+    });
   };
 
   const handleSelectCategory = (selectedCategory) => {

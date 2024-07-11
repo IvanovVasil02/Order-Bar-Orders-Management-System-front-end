@@ -1,5 +1,5 @@
 import { APIBASE } from "./config/apiConfig";
-import { fetchAllTables } from "./tablesActions";
+import { fetchAllTables, ADD_ORDER_TO_TABLE } from "./tablesActions";
 
 export const GET_ORDER_LIST = "GET_ORDER_LIST";
 export const UPDATE_ORDER_LIST = "UPDATE_ORDER_LIST";
@@ -47,7 +47,7 @@ export const saveOrder = (tableId, note, productList1, token) => {
 
       if (resp.ok) {
         const data = await resp.json();
-        dispatch({ type: UPDATE_ORDER_LIST, payload: data });
+        dispatch({ type: ADD_ORDER_TO_TABLE, payload: data });
       }
     } catch (error) {
       console.log(error);
@@ -59,6 +59,7 @@ export const saveOrder = (tableId, note, productList1, token) => {
 
 export const addToOrder = (orderId, product, token) => {
   return async (dispatch) => {
+    console.log(product);
     try {
       const resp = await fetch(APIBASE + "/orders/addToOrder/" + orderId, {
         method: "PUT",
@@ -70,7 +71,8 @@ export const addToOrder = (orderId, product, token) => {
       });
 
       if (resp.ok) {
-        dispatch(fetchAllTables(token));
+        const data = await resp.json();
+        dispatch({ type: ADD_ORDER_TO_TABLE, payload: data });
       }
     } catch (error) {
       console.log(error);
