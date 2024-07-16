@@ -58,7 +58,7 @@ const EditTableModal = (props) => {
                 placeholder={"Tavolo numero " + props.table.tableNumber}
                 onClick={(e) => handleInputFocus("table", e, isTextVisible, setIsTextVisible)}
                 onBlur={(e) => handleBlur("table", e, isTextVisible, setIsTextVisible)}
-                onChange={(e) => SVGAnimatedNumber(e.target.value)}
+                onChange={(e) => setNum(e.target.value)}
               />
             </Form.Group>
           </div>
