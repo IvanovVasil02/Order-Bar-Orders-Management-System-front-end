@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import SockJS from "sockjs-client";
 import { Stomp } from "@stomp/stompjs";
+import { APIBASE } from "./apiConfig";
 
-const SOCKET_URL = "https://bar-order-management-system-production.up.railway.app/websocket";
+const SOCKET_URL = APIBASE + "/websocket";
 
 const useWebSocket = () => {
   const [client, setClient] = useState(null);

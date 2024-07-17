@@ -266,3 +266,35 @@ td {
   margin-block: 5px;
   font-size: 1.1rem !important;
 }
+
+.slide-in-left {
+  animation: slide-in-left 0.5s ease-in-out forwards;
+}
+
+.slide-out-right {
+  animation: slide-out-right 0.5s ease-in-out forwards;
+}
+
+@keyframes slide-in-left {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-out-right {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
