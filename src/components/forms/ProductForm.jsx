@@ -42,6 +42,8 @@ const ProductForm = (props) => {
   });
 
   useEffect(() => {
+    console.log("product form");
+    console.log(props.token);
     dispatch(fetchAllIngredients(props.token));
   }, [props.token, dispatch]);
 
@@ -58,16 +60,9 @@ const ProductForm = (props) => {
         saveProduct(productCategory, productSubCategory, productName, price, quantity, ingredientList, props.token)
       );
       setTimeout(() => {
+        setIngredientList([]);
         clearFields(
-          [
-            setProductName,
-            setProductCategory,
-            setProductSubCategory,
-            setQuantity,
-            setPrice,
-            setIngredientList,
-            setErrors,
-          ],
+          [setProductName, setProductCategory, setProductSubCategory, setQuantity, setPrice, setErrors],
           setValidated
         );
       }, 3000);

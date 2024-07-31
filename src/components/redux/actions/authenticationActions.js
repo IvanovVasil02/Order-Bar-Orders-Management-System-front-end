@@ -54,8 +54,8 @@ export const fetchLogin = (email, password) => {
       }
       return "Login effettuato con successo!";
     } else if (!response.ok) {
-      const resp = await response.json();
-      throw new Error(resp);
+      const errorData = await response.json();
+      throw errorData;
     }
   };
 };

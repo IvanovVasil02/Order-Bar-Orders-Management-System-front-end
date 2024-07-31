@@ -10,6 +10,7 @@ import IngredientList from "../itemList/IngredientList";
 
 const EditProductModal = (props) => {
   const dispatch = useDispatch();
+  const token = useSelector((state) => state.main.savedToken);
   const allIngredientList = useSelector((state) => state.ingredients.ingredientList);
   const [validated, setValidated] = useState(false);
   // eslint-disable-next-line no-unused-vars
@@ -45,9 +46,10 @@ const EditProductModal = (props) => {
   });
 
   useEffect(() => {
-    dispatch(fetchAllIngredients(props.token));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    console.log("editProduct modal");
+    console.log(token);
+    dispatch(fetchAllIngredients(token));
+  }, [token, dispatch]);
 
   useEffect(() => {
     if (props.data) {
@@ -68,16 +70,7 @@ const EditProductModal = (props) => {
       event.stopPropagation();
     } else {
       dispatch(
-        editProduct(
-          productId,
-          productCategory,
-          productSubCategory,
-          productName,
-          price,
-          quantity,
-          ingredientList,
-          props.token
-        )
+        editProduct(productId, productCategory, productSubCategory, productName, price, quantity, ingredientList, token)
       );
       setValidated(true);
       props.handleClose();

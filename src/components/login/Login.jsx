@@ -36,6 +36,7 @@ const Login = () => {
       setResponseStatus(resp);
       setValidated(true);
     } catch (error) {
+      console.log(error);
       setResponseStatus(error.message);
       setValidated(false);
     }
