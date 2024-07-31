@@ -44,12 +44,12 @@ export const saveProduct = (
         Authorization: "Bearer " + token,
       },
       body: JSON.stringify({
-        productCategory: productCategory,
-        productSubCategory: productSubCategory,
-        productName: productName,
-        price: price,
-        quantity: quantity,
-        ingredientList: ingredientList,
+        productCategory,
+        productSubCategory,
+        productName,
+        price,
+        quantity,
+        ingredientList,
       }),
     });
 
@@ -84,12 +84,12 @@ export const editProduct = (
           Authorization: "Bearer " + token,
         },
         body: JSON.stringify({
-          productCategory: productCategory,
-          productSubCategory: productSubCategory,
-          productName: productName,
-          price: price,
-          quantity: quantity,
-          ingredientList: ingredientList,
+          productCategory,
+          productSubCategory,
+          productName,
+          price,
+          quantity,
+          ingredientList,
         }),
       });
 
